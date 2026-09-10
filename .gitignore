@@ -1,0 +1,9 @@
+.venv/
+.env
+__pycache__/
+*.pyc
+
+# data and models are large - keep them out of git
+ML/data/
+ML/models/
+ML/outputs/

@@ -1,0 +1,157 @@
+@import "tailwindcss";
+
+/*
+  ThermoStats Scientific — design tokens from the Stitch design system.
+  Colour is strictly semantic here: it encodes severity, certainty and
+  classification. It is never decorative.
+*/
+@theme {
+  --font-sans: "Inter", ui-sans-serif, system-ui, -apple-system, sans-serif;
+
+  /* structure */
+  --color-canvas: #f6f7f9;
+  --color-panel: #ffffff;
+  --color-rule: #e3e6ea;
+  --color-edge: #cbd5e1;
+  --color-wash: #f8fafc;
+  --color-ink: #0f172a;
+  --color-muted: #64748b;
+
+  /* telemetry semantics */
+  --color-high: #dc2626;
+  --color-medium: #f59e0b;
+  --color-low: #2563eb;
+  --color-volcano: #7c3aed;
+  --color-confirmed: #16a34a;
+  --color-fire-large: #b91c1c;
+  --color-fire-moderate: #ea580c;
+  --color-fire-small: #eab308;
+
+  --radius-panel: 10px;
+  --radius-control: 6px;
+}
+
+/*
+  Tabular figures are not cosmetic here. Live telemetry, coordinates and
+  scores update constantly; without tnum the digits have different widths
+  and every column jitters as numbers change.
+*/
+html {
+  font-feature-settings: "tnum" 1, "cv05" 1;
+}
+
+body {
+  margin: 0;
+  background: var(--color-canvas);
+  color: var(--color-ink);
+  font-family: var(--font-sans);
+  font-size: 13px;
+  line-height: 18px;
+  -webkit-font-smoothing: antialiased;
+}
+
+.material-symbols-outlined {
+  font-variation-settings: "FILL" 0, "wght" 400, "GRAD" 0, "opsz" 20;
+  font-size: 18px;
+  line-height: 1;
+  user-select: none;
+}
+
+@layer components {
+  /* Base modular surface. Depth comes from a crisp border plus the
+     faintest ambient shadow — never a heavy drop shadow. */
+  .panel {
+    background: var(--color-panel);
+    border: 1px solid var(--color-rule);
+    border-radius: var(--radius-panel);
+    box-shadow: 0 1px 2px 0 rgb(15 23 42 / 0.04);
+  }
+
+  .label-caps {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--color-muted);
+  }
+
+  /* Status pills: tinted ground, solid hairline border, semantic text.
+     Full pill radius so they never read as clickable buttons. */
+  .pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    height: 20px;
+    padding: 0 8px;
+    border-radius: 9999px;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    white-space: nowrap;
+    border: 1px solid transparent;
+  }
+  .pill-dot { width: 5px; height: 5px; border-radius: 9999px; flex: none; }
+
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    height: 32px;
+    padding: 0 12px;
+    border-radius: var(--radius-control);
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    border: 1px solid var(--color-edge);
+    background: var(--color-panel);
+    color: var(--color-ink);
+    font-family: inherit;
+    white-space: nowrap;
+  }
+  .btn:hover { background: var(--color-wash); }
+  .btn-primary {
+    background: var(--color-ink);
+    border-color: var(--color-ink);
+    color: #fff;
+  }
+  .btn-primary:hover { background: #1e293b; }
+
+  /* Dense analytical table: 32px rows, right-aligned numerics. */
+  .tbl { width: 100%; border-collapse: collapse; }
+  .tbl thead th {
+    background: var(--color-wash);
+    border-bottom: 1px solid var(--color-rule);
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--color-muted);
+    text-align: left;
+    padding: 8px 12px;
+    white-space: nowrap;
+  }
+  .tbl tbody td {
+    border-bottom: 1px solid #f1f5f9;
+    padding: 7px 12px;
+    height: 32px;
+    white-space: nowrap;
+  }
+  .tbl tbody tr:hover { background: var(--color-wash); }
+  .num { text-align: right; font-variant-numeric: tabular-nums; }
+}
+
+/* Leaflet needs to inherit the app's type, and its popups should match
+   the panel language rather than Leaflet's defaults. */
+.leaflet-container { font: inherit; background: #eef1f6; }
+.leaflet-popup-content-wrapper {
+  border-radius: 8px;
+  box-shadow: 0 10px 15px -3px rgb(15 23 42 / 0.08),
+              0 4px 6px -4px rgb(15 23 42 / 0.04);
+}
+.leaflet-popup-content { margin: 10px 12px; font-size: 12px; line-height: 17px; }
+
+::-webkit-scrollbar { width: 8px; height: 8px; }
+::-webkit-scrollbar-thumb { background: #dfe3e8; border-radius: 9999px; }
+::-webkit-scrollbar-thumb:hover { background: var(--color-edge); }
+::-webkit-scrollbar-track { background: transparent; }

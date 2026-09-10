@@ -1,0 +1,67 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "maps",
+      "runtimeExecutable": "ML/.venv/Scripts/python.exe",
+      "runtimeArgs": [
+        "-m",
+        "http.server",
+        "8011",
+        "--directory",
+        "ML/outputs/maps"
+      ],
+      "port": 8011
+    },
+    {
+      "name": "api",
+      "runtimeExecutable": "ML/.venv/Scripts/python.exe",
+      "runtimeArgs": [
+        "-m",
+        "uvicorn",
+        "backend.app:app",
+        "--port",
+        "8000",
+        "--reload",
+        "--reload-dir",
+        "backend"
+      ],
+      "port": 8000
+    },
+    {
+      "name": "dashboard",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": [
+        "run",
+        "dev",
+        "--prefix",
+        "frontend"
+      ],
+      "port": 5173
+    },
+    {
+      "name": "dbscanmap",
+      "runtimeExecutable": "ML/.venv/Scripts/python.exe",
+      "runtimeArgs": [
+        "-m",
+        "http.server",
+        "8012",
+        "--directory",
+        "ML/outputs/maps"
+      ],
+      "port": 8012
+    },
+    {
+      "name": "verify",
+      "runtimeExecutable": "ML/.venv/Scripts/python.exe",
+      "runtimeArgs": [
+        "-m",
+        "http.server",
+        "8013",
+        "--directory",
+        "ML/outputs/verify"
+      ],
+      "port": 8013
+    }
+  ]
+}

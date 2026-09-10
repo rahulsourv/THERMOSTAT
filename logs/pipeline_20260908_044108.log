@@ -1,0 +1,5 @@
+[10:11:08] ==============================================================
+[10:11:08] ThermoStats daily pipeline
+[10:11:08] database: postgres@db.lmbkctbetaeoovheffrt.supabase.co:5432/postgres
+[10:11:08] ==============================================================
+[10:11:08] START  download FIRMS

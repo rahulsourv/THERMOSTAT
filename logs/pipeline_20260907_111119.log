@@ -1,0 +1,71 @@
+[16:41:19] ==============================================================
+[16:41:19] ThermoStats daily pipeline
+[16:41:19] database: postgres@db.lmbkctbetaeoovheffrt.supabase.co:5432/postgres
+[16:41:19] ==============================================================
+[16:41:19] START  download FIRMS
+        | Requesting FIRMS data (attempt 1/3)...
+        | 
+        | Detections downloaded: 70,396
+        | Date range: 2026-09-06 to 2026-09-07
+        | Saved to: C:\Users\rahul\OneDrive\Desktop\ThermoStats\ML\data\raw\firms\firms_world_20260907_164124.csv
+[16:41:25] DONE   download FIRMS  (6s)
+[16:41:25] START  score alerts
+        | Live file: firms_world_20260907_164124.csv
+        | Live detections: 70,396
+        | Known places from 2025: 687,289
+        | Classified places loaded: 687,289
+        | 
+        | Matched to a known 2025 place: 46,749
+        | New locations (no history):    23,647
+        | 
+        | Alert levels:
+        |   High               5,301
+        |   Medium             111
+        |   Low                64,953
+        |   Natural (volcano)  31
+        | 
+        | Event classes in tonight's detections:
+        |   agricultural_burning     29,027
+        |   unclassified             23,647
+        |   wildfire                 6,170
+        |   unknown                  6,039
+        |   industrial_unspecified   1,482
+        |   thermal_power_plant      1,149
+        |   industrial_heat          1,065
+        |   gas_flare                960
+        |   mining                   462
+        |   oil_refinery             285
+        |   volcano                  110
+        | 
+        | Of 5,301 High alerts, 860 (16.2%) sit within 2 km of a known thermal power plant.
+        | 
+        | Top 10 alerts:
+        |  latitude  longitude    frp  static_probability  alert_score       alert_level                                                                                     why
+        |  -1.40990   29.20233 189.55            0.996029         99.7 Natural (volcano) active 55 days in 2025, in 12 of 12 months, 98% at night, volcano 3.9 km away - NATURAL
+        |  -1.40453   29.20786 189.55            0.996029         99.7 Natural (volcano) active 55 days in 2025, in 12 of 12 months, 98% at night, volcano 3.9 km away - NATURAL
+        |  -1.40381   29.20321 189.55            0.996029         99.7 Natural (volcano) active 55 days in 2025, in 12 of 12 months, 98% at night, volcano 3.9 km away - NATURAL
+        |  28.90779   19.77551 130.77            0.997528         99.7              High                               active 354 days in 2025, in 12 of 12 months, 75% at night
+        |   9.61683  -63.72870 112.53            0.996587         99.6              High                               active 324 days in 2025, in 12 of 12 months, 89% at night
+        |  -2.57577  121.38241  65.89            0.996824         99.5              High                               active 185 days in 2025, in 12 of 12 months, 74% at night
+        |   9.61738  -63.72003  66.07            0.996587         99.5              High                               active 324 days in 2025, in 12 of 12 months, 89% at night
+        |   9.61944  -63.72435  61.10            0.996587         99.5              High                               active 324 days in 2025, in 12 of 12 months, 89% at night
+        |   9.65015  -63.62704  76.61            0.996570         99.5              High                               active 317 days in 2025, in 12 of 12 months, 90% at night
+        |  34.89587   43.80576  62.15            0.996587         99.5              High                               active 345 days in 2025, in 12 of 12 months, 68% at night
+        | 
+        | Saved to: data\processed\live_hotspot_alerts.csv
+[16:41:30] DONE   score alerts  (5s)
+[16:41:30] START  load to Supabase
+        | Connecting to Supabase: postgres@db.lmbkctbetaeoovheffrt.supabase.co:5432/postgres
+        | Uploading 70,396 alerts...
+        | 
+        | Done. Database holds 687,289 places and 70,396 alerts.
+[16:41:47] DONE   load to Supabase  (17s)
+[16:41:47] START  rebuild map
+        | Places shown: 600
+        | alert_level
+        | High                 597
+        | Natural (volcano)      3
+        | Saved map to: outputs\maps\hotspot_alerts_map.html
+[16:41:48] DONE   rebuild map  (2s)
+[16:41:48] 
+[16:41:48] PIPELINE OK - 70,396 detections, 5,301 High alerts
