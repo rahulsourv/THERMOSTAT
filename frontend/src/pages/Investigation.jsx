@@ -19,8 +19,8 @@ export function Investigation({ selected }) {
     return (
       <div class="panel p-10 text-center max-w-[640px] mx-auto mt-10">
         <Icon name="plagiarism" style="font-size:34px" />
-        <h2 class="text-[20px] font-black tracking-[0.06em] uppercase mt-3 mb-2">No thermal source selected</h2>
-        <p class="text-[13px] text-muted mb-5 uppercase font-bold tracking-[0.04em]">
+        <h2 class="text-[20px] font-semibold mt-3 mb-2">No thermal source selected</h2>
+        <p class="text-[13px] text-muted mb-5 ">
           Select a source on the map, the object list or search to inspect its behaviour and context.
         </p>
         <div class="flex gap-2 justify-center">
@@ -101,7 +101,7 @@ export function Investigation({ selected }) {
                 <tr key={i}>
                   <td class="mono">{d.acq_date}</td><td class="mono">{String(d.acq_time).padStart(4, "0")}</td>
                   <td>{d.daynight === "N" ? "Night" : "Day"}</td><td class="num mono">{d.frp}</td>
-                  <td class="mono uppercase">{d.confidence}</td><td class="font-extrabold uppercase text-[12px]">{d.alert_level}</td>
+                  <td class="mono uppercase">{d.confidence}</td><td class="font-semibold text-[12px]">{d.alert_level}</td>
                   <td class="num mono">{d.alert_score}</td>
                 </tr>
               ))}</tbody>

@@ -35,8 +35,8 @@ export function Anomaly() {
       </div>
 
       <div class="panel mt-6">
-        <div class="px-4 py-3 border-b-2 border-rule flex items-center justify-between gap-3 flex-wrap">
-          <p class="m-0 text-[14px] font-black tracking-[0.05em] uppercase">Detected anomaly sources ({n(cards.length)})</p>
+        <div class="px-4 py-3 border-b border-rule flex items-center justify-between gap-3 flex-wrap">
+          <p class="m-0 text-[14px] font-semibold">Detected anomaly sources ({n(cards.length)})</p>
           <Tabs value={level} onChange={(v) => { setLevel(v); setLimit(48); }}
                 options={[{ label: "All", value: "" }, { label: "High", value: "High" }, { label: "Medium", value: "Medium" },
                           { label: "Low", value: "Low" }, { label: "Volcano", value: "Natural (volcano)" }]} />
@@ -52,7 +52,7 @@ export function Anomaly() {
                       <span class="mono text-[13px] font-bold">CELL_{c.cell_id}</span>
                       <span class="pill border-current" style={`color:${LEVEL_COLOURS[c.alert_level] || "inherit"}`}>{RISK[c.alert_level] || c.alert_level}</span>
                     </div>
-                    <span class="flex items-center gap-1.5 text-[12px] font-extrabold uppercase">
+                    <span class="flex items-center gap-1.5 text-[12px] font-semibold">
                       <Icon name={info.icon} style={`font-size:16px;color:${info.tone}`} />{info.label}
                     </span>
                     <span class="mono text-[12px]">{c.lat.toFixed(4)}° N, {c.lon.toFixed(4)}° E</span>

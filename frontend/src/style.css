@@ -1,67 +1,68 @@
 @import "tailwindcss";
 
 /*
-  ThermoStats — neo-brutalist console.
+  ThermoStats — "Ironbow" instrument console.
 
-  Lime ground, black 2px rules, flat white surfaces and a hard offset shadow.
-  The look is deliberately loud at the frame and quiet inside it: structure is
-  high-contrast so the eye finds panels instantly, while colour inside a panel
-  stays strictly semantic (severity, certainty, class) and is never
-  decoration.
+  The palette comes from the subject: ironbow is the false-colour ramp thermal
+  cameras use (black -> violet -> red -> orange -> yellow). It appears in ONE
+  place as a signature - the gradient edge on the rail and header - and as the
+  orange accent for interactive state. Everything else is a calm cool-fog
+  instrument panel, so heat data is the loudest thing on screen.
 
-  Token NAMES are kept from the previous design so every existing component
-  re-skins by value alone. Dark mode redefines the same names under
-  [data-theme="dark"] on <html>.
+  Token NAMES are unchanged, so every component re-skins by value alone.
 */
 @theme {
-  --font-sans: "Urbanist", ui-sans-serif, system-ui, -apple-system, sans-serif;
-  --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+  --font-sans: "IBM Plex Sans", ui-sans-serif, system-ui, -apple-system, sans-serif;
+  --font-display: "IBM Plex Sans Condensed", "IBM Plex Sans", ui-sans-serif, sans-serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
 
-  /* structure */
-  --color-canvas: #d8f5a9;       /* lime ground */
-  --color-accent: #d8f5a9;
-  --color-accent-deep: #c9f090;
+  --color-canvas: #eef1f5;
+  --color-accent: #ff6a1a;
+  --color-accent-deep: #d9480f;
+  --color-accent-soft: #fff0e6;
   --color-panel: #ffffff;
-  --color-rule: #000000;          /* panel borders */
-  --color-edge: #000000;
-  --color-hair: #e4e4e7;          /* inner row dividers */
-  --color-wash: #f4f4f5;
-  --color-ink: #000000;
-  --color-ink-2: #27272a;
-  --color-muted: #52525b;
-  --color-bar: #000000;           /* header */
+  --color-rule: #dfe3ea;
+  --color-edge: #cfd5de;
+  --color-hair: #eceff4;
+  --color-wash: #f6f7fa;
+  --color-ink: #16131f;
+  --color-ink-2: #3a3547;
+  --color-muted: #6b6778;
+  --color-bar: #17141f;
 
-  /* telemetry semantics */
-  --color-high: #b91c1c;
-  --color-medium: #b45309;
-  --color-low: #1d4ed8;
-  --color-volcano: #7c3aed;
-  --color-confirmed: #15803d;
-  --color-fire-large: #b91c1c;
-  --color-fire-moderate: #ea580c;
-  --color-fire-small: #ca8a04;
+  --color-high: #d92d3a;
+  --color-medium: #e08a00;
+  --color-low: #3b5bdb;
+  --color-volcano: #7b3fe4;
+  --color-confirmed: #1f9d57;
+  --color-fire-large: #c92a2a;
+  --color-fire-moderate: #f76707;
+  --color-fire-small: #f59f00;
 
-  --radius-panel: 0px;
-  --radius-control: 0px;
+  --radius-panel: 12px;
+  --radius-control: 8px;
 }
 
-/* Dark: same names, new values. Accent lime becomes the highlight. */
 [data-theme="dark"] {
-  --color-canvas: #09090b;
-  --color-panel: #141417;
-  --color-rule: #3f3f46;
-  --color-edge: #3f3f46;
-  --color-hair: #27272a;
-  --color-wash: #1c1c21;
-  --color-ink: #ffffff;
-  --color-ink-2: #e4e4e7;
-  --color-muted: #a1a1aa;
-  --color-bar: #000000;
-  --color-high: #ef4444;
-  --color-medium: #f59e0b;
-  --color-low: #3b82f6;
-  --color-confirmed: #22c55e;
+  --color-canvas: #0f0d15;
+  --color-accent: #ff7a33;
+  --color-accent-soft: #2a1a12;
+  --color-panel: #1a1723;
+  --color-rule: #2c2838;
+  --color-edge: #3a3548;
+  --color-hair: #24202f;
+  --color-wash: #211d2b;
+  --color-ink: #f1eff7;
+  --color-ink-2: #cfcadb;
+  --color-muted: #938ea3;
+  --color-bar: #0b0a10;
+  --color-high: #ff5c6a;
+  --color-medium: #ffb020;
+  --color-low: #7b93ff;
+  --color-confirmed: #3ddc84;
 }
+
+:root { --ironbow: linear-gradient(90deg, #2b0a3d, #7a1f76, #d6337a, #f26b1d, #ffc93c, #fff4c2); }
 
 html { font-feature-settings: "tnum" 1; color-scheme: light; }
 html[data-theme="dark"] { color-scheme: dark; }
@@ -72,139 +73,116 @@ body {
   color: var(--color-ink);
   font-family: var(--font-sans);
   font-size: 14px;
-  line-height: 20px;
+  line-height: 21px;
   -webkit-font-smoothing: antialiased;
 }
 
 .material-symbols-outlined {
-  font-variation-settings: "FILL" 0, "wght" 500, "GRAD" 0, "opsz" 20;
-  font-size: 18px;
-  line-height: 1;
-  user-select: none;
+  font-variation-settings: "FILL" 0, "wght" 400, "GRAD" 0, "opsz" 20;
+  font-size: 18px; line-height: 1; user-select: none;
 }
 
-:focus-visible { outline: 3px solid var(--color-ink); outline-offset: 2px; }
+:focus-visible { outline: 2px solid var(--color-accent); outline-offset: 2px; border-radius: 6px; }
 
 @layer components {
-  /* The one surface. Hard offset shadow, no radius, no blur. */
   .panel {
     background: var(--color-panel);
-    border: 2px solid var(--color-rule);
-    border-radius: 0;
-    box-shadow: 4px 4px 0 var(--color-rule);
+    border: 1px solid var(--color-rule);
+    border-radius: var(--radius-panel);
+    box-shadow: 0 1px 2px rgb(22 19 31 / 0.04), 0 4px 16px -8px rgb(22 19 31 / 0.10);
   }
   .panel-flat {
     background: var(--color-panel);
-    border: 2px solid var(--color-rule);
+    border: 1px solid var(--color-rule);
+    border-radius: var(--radius-control);
   }
 
   .label-caps {
-    font-size: 11px;
-    font-weight: 700;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    color: var(--color-ink-2);
+    font-size: 11px; font-weight: 600; letter-spacing: 0.06em;
+    text-transform: uppercase; color: var(--color-muted);
   }
   .mono { font-family: var(--font-mono); font-variant-numeric: tabular-nums; }
 
-  /* Page title block: eyebrow chip, huge tracked title, subtitle, rule. */
   .page-eyebrow {
     display: inline-flex; align-items: center; gap: 8px;
-    background: var(--color-bar); color: var(--color-accent);
-    font-size: 11px; font-weight: 800; letter-spacing: 0.1em;
-    text-transform: uppercase; padding: 5px 10px;
+    font-size: 12px; font-weight: 600; color: var(--color-accent-deep);
+    letter-spacing: 0.02em;
   }
+  [data-theme="dark"] .page-eyebrow { color: var(--color-accent); }
   .page-title {
-    font-size: clamp(26px, 3.4vw, 40px); line-height: 1.05;
-    font-weight: 900; letter-spacing: 0.06em; text-transform: uppercase;
-    margin: 14px 0 6px;
+    font-family: var(--font-display);
+    font-size: clamp(26px, 3vw, 34px); line-height: 1.1;
+    font-weight: 700; letter-spacing: -0.01em; margin: 6px 0 6px;
+    text-wrap: balance;
   }
-  .page-sub {
-    font-size: 12px; font-weight: 700; letter-spacing: 0.08em;
-    text-transform: uppercase; color: var(--color-ink-2); margin: 0;
-  }
+  .page-sub { font-size: 14px; color: var(--color-muted); margin: 0; max-width: 70ch; }
 
-  /* Numbered section header: "01  OPERATIONAL SUMMARY ........ note" */
   .section-head {
     display: flex; align-items: baseline; gap: 12px; flex-wrap: wrap;
-    border-bottom: 2px solid var(--color-rule);
-    padding-bottom: 10px; margin: 34px 0 16px;
+    margin: 32px 0 14px;
   }
-  .section-head .idx { font-family: var(--font-mono); font-size: 13px; color: var(--color-muted); }
   .section-head h2 {
-    margin: 0; font-size: 22px; font-weight: 900;
-    letter-spacing: 0.06em; text-transform: uppercase;
+    margin: 0; font-family: var(--font-display);
+    font-size: 19px; font-weight: 600; letter-spacing: -0.005em;
   }
-  .section-head .note {
-    margin-left: auto; font-size: 11px; font-weight: 700;
-    letter-spacing: 0.08em; text-transform: uppercase; color: var(--color-ink-2);
-  }
+  .section-head .note { margin-left: auto; font-size: 12px; color: var(--color-muted); }
 
-  /* Status chip: square, bordered, uppercase. */
   .pill {
     display: inline-flex; align-items: center; gap: 5px;
-    height: 20px; padding: 0 7px; border-radius: 0;
-    font-size: 10px; font-weight: 800; letter-spacing: 0.08em;
-    text-transform: uppercase; white-space: nowrap;
-    border: 1.5px solid transparent;
+    height: 22px; padding: 0 9px; border-radius: 999px;
+    font-size: 11px; font-weight: 600; letter-spacing: 0.02em;
+    white-space: nowrap; border: 1px solid transparent;
   }
-  .pill-dot { width: 6px; height: 6px; border-radius: 0; flex: none; }
+  .pill-dot { width: 6px; height: 6px; border-radius: 999px; flex: none; }
 
   .btn {
     display: inline-flex; align-items: center; justify-content: center; gap: 7px;
-    height: 36px; padding: 0 14px; border-radius: 0;
-    font-size: 12px; font-weight: 800; letter-spacing: 0.06em;
-    text-transform: uppercase; cursor: pointer;
-    border: 2px solid var(--color-rule);
+    height: 36px; padding: 0 14px; border-radius: var(--radius-control);
+    font: 600 13px var(--font-sans); cursor: pointer; white-space: nowrap;
+    border: 1px solid var(--color-edge);
     background: var(--color-panel); color: var(--color-ink);
-    font-family: inherit; white-space: nowrap;
-    transition: transform .08s ease, box-shadow .08s ease;
+    transition: background .12s ease, border-color .12s ease;
   }
-  .btn:hover { transform: translate(-2px, -2px); box-shadow: 3px 3px 0 var(--color-rule); }
-  .btn:active { transform: none; box-shadow: none; }
-  .btn:disabled { opacity: .45; cursor: not-allowed; transform: none; box-shadow: none; }
-  .btn-primary { background: var(--color-bar); border-color: var(--color-bar); color: #fff; }
-  [data-theme="dark"] .btn-primary { background: var(--color-accent); border-color: var(--color-accent); color: #000; }
-  .btn-accent { background: var(--color-accent); border-color: var(--color-rule); color: #000; }
+  .btn:hover { background: var(--color-wash); border-color: var(--color-muted); }
+  .btn:disabled { opacity: .45; cursor: not-allowed; }
+  .btn-primary { background: var(--color-accent); border-color: var(--color-accent); color: #fff; }
+  .btn-primary:hover { background: var(--color-accent-deep); border-color: var(--color-accent-deep); }
+  .btn-accent { background: var(--color-accent-soft); border-color: transparent; color: var(--color-accent-deep); }
 
   .field {
-    height: 36px; padding: 0 10px; border: 2px solid var(--color-rule);
-    background: var(--color-panel); color: var(--color-ink);
-    font: 600 13px var(--font-sans); border-radius: 0;
+    height: 36px; padding: 0 10px; border-radius: var(--radius-control);
+    border: 1px solid var(--color-edge); background: var(--color-panel);
+    color: var(--color-ink); font: 500 13px var(--font-sans);
   }
+  .field:focus { border-color: var(--color-accent); outline: none; box-shadow: 0 0 0 3px var(--color-accent-soft); }
   .field-mono { font-family: var(--font-mono); font-size: 12px; }
 
-  /* Data table: black header band, mono numerics. */
   .tbl { width: 100%; border-collapse: collapse; }
   .tbl thead th {
-    background: var(--color-bar); color: #fff;
-    font-size: 11px; font-weight: 800; letter-spacing: 0.06em;
+    background: var(--color-wash); color: var(--color-muted);
+    border-bottom: 1px solid var(--color-rule);
+    font-size: 11px; font-weight: 600; letter-spacing: 0.05em;
     text-transform: uppercase; text-align: left;
-    padding: 10px 12px; white-space: nowrap;
+    padding: 10px 14px; white-space: nowrap;
   }
   .tbl tbody td {
     border-bottom: 1px solid var(--color-hair);
-    padding: 9px 12px; white-space: nowrap; vertical-align: top;
+    padding: 10px 14px; white-space: nowrap; vertical-align: top;
   }
   .tbl tbody tr:hover { background: var(--color-wash); }
   .num { text-align: right; font-variant-numeric: tabular-nums; }
 
-  .kpi-value { font-family: var(--font-mono); font-size: 26px; font-weight: 700; line-height: 1; }
+  .kpi-value { font-family: var(--font-display); font-size: 30px; font-weight: 700; line-height: 1; letter-spacing: -0.01em; }
+  .ironbow-edge { background: var(--ironbow); }
 }
 
-/* Leaflet in the same language: square controls, hard-shadow popups. */
-.leaflet-container { font: inherit; background: #e4e4e7; }
-.leaflet-bar { border: 2px solid #000 !important; border-radius: 0 !important; box-shadow: none !important; }
-.leaflet-bar a { border-radius: 0 !important; color: #000 !important; }
-.leaflet-popup-content-wrapper { border-radius: 0; border: 2px solid #000; box-shadow: 4px 4px 0 #000; }
-.leaflet-popup-tip { border: 2px solid #000; }
-.leaflet-popup-content { margin: 10px 12px; font-size: 12px; line-height: 17px; }
+.leaflet-container { font: inherit; background: #e3e8ee; border-radius: 0 0 var(--radius-panel) var(--radius-panel); }
+.leaflet-bar { border: 1px solid var(--color-edge) !important; border-radius: 8px !important; overflow: hidden; box-shadow: 0 2px 8px rgb(0 0 0 / .08) !important; }
+.leaflet-popup-content-wrapper { border-radius: 10px; box-shadow: 0 10px 30px -10px rgb(22 19 31 / .35); }
+.leaflet-popup-content { margin: 11px 13px; font-size: 12px; line-height: 17px; }
 
 ::-webkit-scrollbar { width: 10px; height: 10px; }
-::-webkit-scrollbar-thumb { background: var(--color-ink); }
-::-webkit-scrollbar-track { background: var(--color-canvas); }
+::-webkit-scrollbar-thumb { background: var(--color-edge); border-radius: 999px; border: 2px solid var(--color-canvas); }
+::-webkit-scrollbar-track { background: transparent; }
 
-@media (prefers-reduced-motion: reduce) {
-  .btn { transition: none; }
-  .btn:hover { transform: none; }
-}
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; } }

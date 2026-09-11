@@ -35,13 +35,13 @@ export function System() {
         <div class="panel p-4 mt-4 flex items-start gap-3 flex-wrap">
           <Icon name="schedule" style="font-size:22px" />
           <div class="flex-1 min-w-[260px]">
-            <p class="m-0 text-[14px] font-black uppercase tracking-[0.04em]">Runs automatically every day at 05:00 IST</p>
+            <p class="m-0 text-[14px] font-semibold">Runs automatically every day at 05:00 IST</p>
             <p class="m-0 mt-1 text-[13px] text-muted">
               Windows Task Scheduler runs <span class="mono">run_daily.bat</span>, which fetches the last two UTC days
               of FIRMS worldwide, scores them and reloads the database in one transaction. Run it by hand from the
               project folder:
             </p>
-            <code class="mono block mt-2 text-[12px] bg-[var(--color-wash)] border-2 border-rule p-2.5">run_daily.bat</code>
+            <code class="mono block mt-2 text-[12px] bg-[var(--color-wash)] border border-rule rounded-[8px] p-2.5">run_daily.bat</code>
           </div>
         </div>
       </Section>
@@ -54,7 +54,7 @@ export function System() {
               <tbody>{runs.runs.map((r) => (
                 <tr key={r.id}>
                   <td class="mono">#{r.id}</td>
-                  <td class="font-extrabold uppercase text-[12px]" style={`color:${r.status === "success" ? "var(--color-confirmed)" : "var(--color-high)"}`}>{r.status}</td>
+                  <td class="font-semibold text-[12px]" style={`color:${r.status === "success" ? "var(--color-confirmed)" : "var(--color-high)"}`}>{r.status}</td>
                   <td class="mono text-[12px]">{fmt(r.started_at)}</td>
                   <td class="num mono">{r.seconds ?? "—"}</td>
                   <td class="num mono">{n(r.detections)}</td>

@@ -44,14 +44,14 @@ export function Alerts() {
         </div>
         <div class="panel">
           {!data ? <Loading /> : data.alerts.length === 0 ? <Empty title="No alerts in this category" /> : (
-            <div class="divide-y-2 divide-[var(--color-hair)]">
+            <div class="divide-y divide-[var(--color-hair)]">
               {data.alerts.map((a, i) => (
                 <div key={`${a.cell_id}-${i}`} class="px-4 py-3.5 grid gap-3 items-start"
                      style="grid-template-columns:minmax(0,1fr) auto">
                   <div class="min-w-0">
                     <div class="flex items-center gap-2 flex-wrap mb-1.5">
                       <span class="pill" style={`color:${LEVEL_COLOURS[a.alert_level] || "inherit"};border-color:currentColor`}>{a.alert_level}</span>
-                      <span class="text-[13px] font-black uppercase tracking-[0.04em]">{classInfo(a.event_class).label}</span>
+                      <span class="text-[13px] font-semibold">{classInfo(a.event_class).label}</span>
                       <span class="mono text-[11px] text-muted">score {a.alert_score}</span>
                     </div>
                     <p class="m-0 text-[13px] leading-[19px]">{a.why}</p>

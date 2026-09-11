@@ -2,9 +2,8 @@ import { useEffect, useState } from "preact/hooks";
 import { Icon } from "./ui.jsx";
 
 /* ---------------------------------------------------------------------------
-   Hash router. Pages are addressable (#/investigation/32085930), so a link to
-   one source can be shared, bookmarked, or opened from a map popup - which a
-   component-state router cannot do. No dependency needed for this much.
+   Hash router. Every page and source is addressable (#/investigation/123),
+   so a link to one source can be shared or bookmarked.
 --------------------------------------------------------------------------- */
 export function parseHash() {
   const [page = "dashboard", ...rest] = (location.hash.replace(/^#\/?/, "") || "dashboard").split("/");
@@ -29,22 +28,21 @@ export const go = (path) => { location.hash = `#/${path}`; };
 export function PageHeader({ eyebrow, title, sub, right }) {
   return (
     <header class="mb-2">
-      {eyebrow && <span class="page-eyebrow"><span class="w-2 h-2 bg-[var(--color-accent)]" />{eyebrow}</span>}
+      {eyebrow && <span class="page-eyebrow"><span class="w-4 h-[3px] rounded-full ironbow-edge" />{eyebrow}</span>}
       <div class="flex items-end justify-between gap-4 flex-wrap">
         <h1 class="page-title">{title}</h1>
         {right}
       </div>
       {sub && <p class="page-sub">{sub}</p>}
-      <div class="border-b-2 border-rule mt-5" />
     </header>
   );
 }
 
-export function Section({ idx, title, note, children }) {
+/** Section: a quiet title with an optional note on the right. */
+export function Section({ title, note, children }) {
   return (
     <section>
       <div class="section-head">
-        {idx && <span class="idx">{idx}</span>}
         <h2>{title}</h2>
         {note && <span class="note">{note}</span>}
       </div>
@@ -53,32 +51,38 @@ export function Section({ idx, title, note, children }) {
   );
 }
 
-/** KPI tile: label, icon, one big mono number. */
+/** KPI card: tinted icon badge, label, large figure. */
 export function Kpi({ label, value, icon, tone, sub }) {
+  const c = tone || "var(--color-accent)";
   return (
-    <div class="panel-flat px-4 py-3.5 flex flex-col gap-2 min-h-[92px]">
-      <span class="label-caps">{label}</span>
-      <div class="flex items-center gap-2.5">
-        {icon && <Icon name={icon} style={`font-size:20px;color:${tone || "var(--color-ink)"}`} />}
-        <span class="kpi-value" style={tone ? `color:${tone}` : ""}>{value ?? "…"}</span>
+    <div class="panel px-4 py-4 flex items-start gap-3.5 min-h-[96px]">
+      {icon && (
+        <span class="w-10 h-10 shrink-0 rounded-[10px] flex items-center justify-center"
+              style={`background:color-mix(in srgb, ${c} 13%, transparent);color:${c}`}>
+          <Icon name={icon} style="font-size:21px" />
+        </span>
+      )}
+      <div class="min-w-0">
+        <span class="label-caps">{label}</span>
+        <div class="kpi-value mt-1.5" style={tone ? `color:${tone}` : ""}>{value ?? "…"}</div>
+        {sub && <span class="block mt-1 text-[12px] text-muted">{sub}</span>}
       </div>
-      {sub && <span class="text-[12px] text-muted font-semibold">{sub}</span>}
     </div>
   );
 }
 
-/** Bordered tab chips; the active one fills black. */
+/** Segmented control. */
 export function Tabs({ options, value, onChange }) {
   return (
-    <div class="flex flex-wrap gap-2">
+    <div class="inline-flex flex-wrap gap-1 p-1 rounded-[10px] bg-[var(--color-wash)] border border-rule">
       {options.map((o) => {
         const on = o.value === value;
         return (
           <button key={String(o.value)} onClick={() => onChange(o.value)}
-                  class="h-8 px-3 border-2 border-rule text-[11px] font-extrabold tracking-[0.06em] uppercase cursor-pointer"
-                  style={on ? "background:var(--color-bar);color:#fff;border-color:var(--color-bar)"
-                            : "background:var(--color-panel);color:var(--color-ink)"}>
-            {o.label}{o.count != null && <span class="mono ml-1.5 opacity-80">({o.count.toLocaleString()})</span>}
+                  class="h-8 px-3 rounded-[7px] border-0 text-[13px] font-semibold cursor-pointer transition-colors"
+                  style={on ? "background:var(--color-panel);color:var(--color-ink);box-shadow:0 1px 3px rgb(0 0 0 / .12)"
+                            : "background:transparent;color:var(--color-muted)"}>
+            {o.label}{o.count != null && <span class="mono ml-1.5 text-[11px]" style="color:var(--color-muted)">{o.count.toLocaleString()}</span>}
           </button>
         );
       })}
@@ -86,29 +90,35 @@ export function Tabs({ options, value, onChange }) {
   );
 }
 
-/** Pager with a rows-per-page selector. */
 export function Pager({ offset, limit, total, onOffset, onLimit }) {
   const page = Math.floor(offset / limit) + 1;
   const pages = Math.max(1, Math.ceil(total / limit));
   const from = total ? offset + 1 : 0;
   const to = Math.min(offset + limit, total);
   return (
-    <div class="flex items-center justify-between gap-3 flex-wrap px-4 py-3 border-t-2 border-rule">
-      <button class="btn h-8" disabled={page <= 1} onClick={() => onOffset(Math.max(0, offset - limit))}>Previous</button>
-      <span class="mono text-[12px]">Page {page} of {pages} ({from.toLocaleString()}–{to.toLocaleString()} of {total.toLocaleString()})</span>
+    <div class="flex items-center justify-between gap-3 flex-wrap px-4 py-3 border-t border-rule">
+      <span class="text-[13px] text-muted">
+        <span class="mono text-[var(--color-ink)]">{from.toLocaleString()}–{to.toLocaleString()}</span> of <span class="mono">{total.toLocaleString()}</span>
+      </span>
       <div class="flex items-center gap-2">
         {onLimit && (
           <select class="field h-8" value={limit} onChange={(e) => onLimit(Number(e.target.value))}>
-            {[10, 25, 50, 100].map((n) => <option key={n} value={n}>{n} rows</option>)}
+            {[10, 25, 50, 100].map((n) => <option key={n} value={n}>{n} per page</option>)}
           </select>
         )}
-        <button class="btn h-8" disabled={page >= pages} onClick={() => onOffset(offset + limit)}>Next</button>
+        <button class="btn h-8 w-8 px-0" aria-label="Previous page" disabled={page <= 1} onClick={() => onOffset(Math.max(0, offset - limit))}>
+          <Icon name="chevron_left" />
+        </button>
+        <span class="mono text-[12px] text-muted">{page} / {pages}</span>
+        <button class="btn h-8 w-8 px-0" aria-label="Next page" disabled={page >= pages} onClick={() => onOffset(offset + limit)}>
+          <Icon name="chevron_right" />
+        </button>
       </div>
     </div>
   );
 }
 
-/** Save rows as CSV or JSON. Works in the local app; generated client-side. */
+/** Save rows as CSV or JSON, generated in the browser. */
 export function download(name, rows, kind = "csv") {
   let body, type;
   if (kind === "json") {

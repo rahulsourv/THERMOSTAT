@@ -62,7 +62,7 @@ export function DataLayers() {
               <div key={l.name} class="panel p-4 flex items-start gap-4 flex-wrap">
                 <Icon name={l.icon} style="font-size:26px" />
                 <div class="flex-1 min-w-[260px]">
-                  <p class="m-0 text-[15px] font-black tracking-[0.04em] uppercase">{l.name}</p>
+                  <p class="m-0 text-[15px] font-semibold">{l.name}</p>
                   <p class="mono m-0 mt-1 text-[12px] text-muted">{l.meta}</p>
                   <p class="m-0 mt-2 text-[13px] leading-[19px]">{l.note}</p>
                 </div>

@@ -69,7 +69,7 @@ export function Search() {
               <div key={a.cell_id} class="panel p-4 flex flex-col gap-2">
                 <div class="flex items-center justify-between gap-2">
                   <span class="mono text-[13px] font-bold">CELL_{a.cell_id}</span>
-                  <span class="text-[11px] font-extrabold uppercase">{a.alert_level}</span>
+                  <span class="text-[11px] font-semibold">{a.alert_level}</span>
                 </div>
                 <ClassBadge eventClass={a.event_class} source={a.class_source} confidence={a.class_confidence} />
                 <p class="m-0 text-[12px] text-muted leading-[17px] min-h-[34px]">{a.why}</p>

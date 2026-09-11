@@ -65,7 +65,7 @@ export function Reports() {
         {reports.map((r) => (
           <div key={r.id} class="panel p-5 flex flex-col gap-3">
             <span class="label-caps flex items-center gap-2"><Icon name={r.icon} style="font-size:16px" />{r.kind} · {today()}</span>
-            <h2 class="m-0 text-[20px] font-black tracking-[0.05em] uppercase">{r.title}</h2>
+            <h2 class="m-0 text-[20px] font-semibold">{r.title}</h2>
             <p class="m-0 text-[13px] text-muted leading-[19px] flex-1">{r.body}</p>
             <div class="flex gap-2">
               {!r.json && <button class="btn btn-primary flex-1" disabled={!!busy} onClick={() => run(r, "csv")}>

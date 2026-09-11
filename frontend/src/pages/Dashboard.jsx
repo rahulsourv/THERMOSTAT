@@ -84,7 +84,7 @@ export function Dashboard() {
       </Section>
 
       <Section idx="02" title="Spatial object explorer" note="Selected-date detections, typed by source">
-        <div class="panel p-4 mb-4 grid gap-3" style="grid-template-columns:repeat(auto-fit,minmax(240px,1fr))">
+        <div class="panel p-4 mb-4 grid gap-3 grid-cols-1 sm:grid-cols-2 xl:grid-cols-4">
           <label class="flex flex-col gap-1.5">
             <span class="label-caps">Source classification</span>
             <select class="field" value={eventClass} disabled={flaresOnly}
@@ -93,7 +93,7 @@ export function Dashboard() {
               {EVENT_CLASSES.map((c) => <option key={c.id} value={c.id}>{c.label}</option>)}
             </select>
           </label>
-          <label class="panel-flat flex items-center justify-center gap-2 cursor-pointer text-[12px] font-extrabold tracking-[0.06em] uppercase">
+          <label class="panel-flat flex items-center justify-center gap-2 cursor-pointer text-[12px] font-semibold">
             <input type="checkbox" checked={flaresOnly} onChange={(e) => { setFlaresOnly(e.target.checked); setOffset(0); }} />
             Likely gas flares only
           </label>
@@ -102,28 +102,28 @@ export function Dashboard() {
         </div>
 
         <div class="panel relative mb-4">
-          <div class="absolute top-3 right-3 z-[500] flex border-2 border-black bg-black">
+          <div class="absolute top-3 right-3 z-[500] flex p-1 gap-1 rounded-[9px] bg-[var(--color-panel)] border border-rule shadow-sm">
             {BASEMAPS.map(([id, label]) => (
               <button key={id} onClick={() => setBasemap(id)}
-                      class="h-7 px-2.5 text-[10px] font-extrabold tracking-[0.06em] uppercase cursor-pointer border-0"
-                      style={basemap === id ? "background:#d8f5a9;color:#000" : "background:#000;color:#fff"}>{label}</button>
+                      class="h-7 px-2.5 rounded-[6px] text-[12px] font-semibold cursor-pointer border-0"
+                      style={basemap === id ? "background:var(--color-accent);color:#fff" : "background:transparent;color:var(--color-ink)"}>{label}</button>
             ))}
           </div>
           {geo ? <AlertMap geojson={geo} colourBy="class" mode="industrial" basemap={basemap}
                            onSelect={(c) => go(`investigation/${c}`)} />
                : <Loading label="Loading map" />}
-          <div class="flex flex-wrap gap-4 px-4 py-3 border-t-2 border-rule">
+          <div class="flex flex-wrap gap-4 px-4 py-3 border-t border-rule">
             {Object.entries(FAMILY_TONE).map(([k, t]) => (
-              <span key={k} class="flex items-center gap-2 text-[11px] font-extrabold tracking-[0.06em] uppercase">
-                <span class="w-3 h-3 border-2 border-black" style={`background:${t}`} />{k}
+              <span key={k} class="flex items-center gap-2 text-[11px] font-semibold">
+                <span class="w-3 h-3 rounded-full" style={`background:${t}`} />{k}
               </span>
             ))}
           </div>
         </div>
 
         <div class="panel">
-          <div class="px-4 py-3 border-b-2 border-rule">
-            <p class="m-0 text-[14px] font-black tracking-[0.05em] uppercase">Detections on this date</p>
+          <div class="px-4 py-3 border-b border-rule">
+            <p class="m-0 text-[14px] font-semibold">Detections on this date</p>
             <p class="m-0 text-[12px] text-muted">Showing {n(rows?.length)} on this page, {n(total)} matching · a place can appear once per satellite pass</p>
           </div>
           <div class="overflow-x-auto">
@@ -137,7 +137,7 @@ export function Dashboard() {
                     <tr key={`${r.cell_id}-${i}`}>
                       <td><button onClick={() => go(`investigation/${r.cell_id}`)} class="mono text-[12px] font-bold underline bg-transparent border-0 cursor-pointer p-0 text-[var(--color-ink)]">CELL_{r.cell_id}</button></td>
                       <td><ClassBadge eventClass={r.event_class} source={r.class_source} confidence={r.class_confidence} /></td>
-                      <td><span class="text-[12px] font-extrabold uppercase" style={`color:${LEVEL_COLOURS[r.alert_level] || "inherit"}`}>{r.alert_level}</span></td>
+                      <td><span class="text-[12px] font-semibold" style={`color:${LEVEL_COLOURS[r.alert_level] || "inherit"}`}>{r.alert_level}</span></td>
                       <td class="num mono">{r.alert_score}</td>
                       <td class="num mono">{r.frp}</td>
                       <td class="mono text-[12px]">{r.daynight === "N" ? "Night" : "Day"} {String(r.acq_time).padStart(4, "0")}</td>
@@ -155,16 +155,16 @@ export function Dashboard() {
       <Section idx="03" title="Distribution and alerts" note="Source types and the day's strongest alerts">
         <div class="grid gap-4 items-start" style="grid-template-columns:repeat(auto-fit,minmax(380px,1fr))">
           <div class="panel">
-            <div class="px-4 py-3 border-b-2 border-rule">
-              <p class="m-0 text-[14px] font-black tracking-[0.05em] uppercase">Industry distribution</p>
+            <div class="px-4 py-3 border-b border-rule">
+              <p class="m-0 text-[14px] font-semibold">Industry distribution</p>
               <p class="m-0 text-[12px] text-muted">Industrial source types across all current detections</p>
             </div>
             <div class="p-4">{classes ? <BarChart data={distRows} valueKey="count" labelKey="label" /> : <Loading />}</div>
           </div>
           <div class="panel">
-            <div class="px-4 py-3 border-b-2 border-rule flex items-center justify-between gap-2">
+            <div class="px-4 py-3 border-b border-rule flex items-center justify-between gap-2">
               <div>
-                <p class="m-0 text-[14px] font-black tracking-[0.05em] uppercase">Recent alerts</p>
+                <p class="m-0 text-[14px] font-semibold">Recent alerts</p>
                 <p class="m-0 text-[12px] text-muted">Strongest scoring detections on {date || "…"}</p>
               </div>
               <button class="btn btn-primary h-8" onClick={() => go("alerts")}>View all</button>
@@ -176,7 +176,7 @@ export function Dashboard() {
                 <button key={i} onClick={() => go(`investigation/${a.cell_id}`)}
                         class="text-left panel-flat px-3 py-2.5 cursor-pointer bg-[var(--color-panel)] text-[var(--color-ink)]">
                   <div class="flex items-center justify-between gap-2">
-                    <span class="text-[12px] font-extrabold uppercase">{classInfo(a.event_class).label}</span>
+                    <span class="text-[12px] font-semibold">{classInfo(a.event_class).label}</span>
                     <span class="pill border-black text-[var(--color-ink)]">{a.alert_level}</span>
                   </div>
                   <p class="m-0 mt-1 text-[12px] text-muted leading-[17px]">{a.why}</p>

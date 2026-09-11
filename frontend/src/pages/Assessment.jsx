@@ -63,10 +63,10 @@ export function Assessment() {
             <p class="label-caps m-0 mb-3">Active thermal sources by region</p>
             {!geo ? <Loading /> : regionRows.map(([name, count]) => (
               <div key={name} class="mb-2.5">
-                <div class="flex justify-between text-[12px] font-extrabold uppercase mb-1">
+                <div class="flex justify-between text-[12px] font-semibold mb-1">
                   <span>{name}</span><span class="mono">{n(count)}</span>
                 </div>
-                <div class="h-3 border-2 border-rule bg-[var(--color-wash)]">
+                <div class="h-3 border border-rule bg-[var(--color-wash)]">
                   <div class="h-full bg-[var(--color-ink)]" style={`width:${(count / regionMax) * 100}%`} />
                 </div>
               </div>
@@ -77,10 +77,10 @@ export function Assessment() {
             <p class="label-caps m-0 mb-3">Industrial vs natural</p>
             {!cls ? <Loading /> : Object.entries(fam).map(([k, v]) => (
               <div key={k} class="mb-3">
-                <div class="flex justify-between text-[12px] font-extrabold uppercase mb-1">
+                <div class="flex justify-between text-[12px] font-semibold mb-1">
                   <span>{k}</span><span class="mono">{((v / famTotal) * 100).toFixed(1)}% · {n(v)}</span>
                 </div>
-                <div class="h-4 border-2 border-rule bg-[var(--color-wash)]">
+                <div class="h-4 border border-rule bg-[var(--color-wash)]">
                   <div class="h-full" style={`width:${(v / famTotal) * 100}%;background:${FAMILY_TONE[k]}`} />
                 </div>
               </div>
@@ -93,7 +93,7 @@ export function Assessment() {
       <Section idx="03" title="Unmatched satellite detections" note="New locations requiring ground verification">
         <div class="panel">
           {!unmatched ? <Loading /> : unmatched.alerts.length === 0 ? <Empty title="Every detection matched a known place" /> : (
-            <div class="divide-y-2 divide-[var(--color-hair)]">
+            <div class="divide-y divide-[var(--color-hair)]">
               {unmatched.alerts.map((a, i) => (
                 <div key={i} class="px-4 py-3 flex items-center gap-4 flex-wrap">
                   <span class="mono text-[12px] font-bold min-w-[210px]">FIRMS #{a.acq_date}_{String(a.acq_time).padStart(4, "0")}</span>
@@ -104,7 +104,7 @@ export function Assessment() {
               ))}
             </div>
           )}
-          <div class="px-4 py-3 border-t-2 border-rule flex justify-between items-center">
+          <div class="px-4 py-3 border-t border-rule flex justify-between items-center">
             <span class="text-[12px] text-muted">Showing the 30 strongest of {n(unmatched?.total_matching)}</span>
             <button class="btn h-8" onClick={() => go("alerts")}>Open alerts</button>
           </div>
