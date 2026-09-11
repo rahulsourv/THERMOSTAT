@@ -20,11 +20,17 @@ export const api = {
   classification: () => get("/api/classification"),
   metrics: () => get("/api/metrics"),
 
-  alerts: ({ level, eventClass, limit = 50, confirmedOnly = false } = {}) => {
-    const params = new URLSearchParams({ limit });
+  dates: (limit = 14) => get(`/api/alerts/dates?limit=${limit}`),
+
+  alerts: ({ level, eventClass, date, known, limit = 50, offset = 0,
+             confirmedOnly = false, bbox } = {}) => {
+    const params = new URLSearchParams({ limit, offset });
     if (level) params.set("level", level);
     if (eventClass) params.set("event_class", eventClass);
+    if (date) params.set("date", date);
+    if (known !== undefined && known !== null) params.set("known", String(known));
     if (confirmedOnly) params.set("confirmed_only", "true");
+    if (bbox) params.set("bbox", bbox);
     return get(`/api/alerts?${params}`);
   },
 
@@ -34,10 +40,12 @@ export const api = {
   firesGeojson: ({ minFrp = 0, limit = 1500 } = {}) =>
     get(`/api/fires/geojson?min_frp=${minFrp}&limit=${limit}`),
 
-  geojson: ({ level, eventClass, limit = 800 } = {}) => {
+  geojson: ({ level, eventClass, date, known, limit = 800 } = {}) => {
     const params = new URLSearchParams({ limit, one_per_place: "true" });
     if (level) params.set("level", level);
     if (eventClass) params.set("event_class", eventClass);
+    if (date) params.set("date", date);
+    if (known !== undefined && known !== null) params.set("known", String(known));
     return get(`/api/alerts/geojson?${params}`);
   },
 };

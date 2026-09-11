@@ -1,61 +1,41 @@
 import { useEffect, useState } from "preact/hooks";
 import { api } from "./api.js";
 import { Shell, ErrorScreen } from "./components/Shell.jsx";
-import { Panel, Empty } from "./components/ui.jsx";
-import { Industrial } from "./pages/Industrial.jsx";
+import { useRoute, go } from "./components/layout.jsx";
+import { Dashboard } from "./pages/Dashboard.jsx";
+import { Search } from "./pages/Search.jsx";
+import { Investigation } from "./pages/Investigation.jsx";
+import { Assessment } from "./pages/Assessment.jsx";
+import { Anomaly } from "./pages/Anomaly.jsx";
+import { Alerts } from "./pages/Alerts.jsx";
 import { Fires } from "./pages/Fires.jsx";
 import { Classification } from "./pages/Classification.jsx";
-import { ModelReport } from "./pages/ModelReport.jsx";
+import { Reports } from "./pages/Reports.jsx";
+import { DataLayers } from "./pages/DataLayers.jsx";
+import { System } from "./pages/System.jsx";
 
-/**
- * Place detail has no page of its own yet. The alert feed still offers an
- * "open place" action, so route it somewhere honest rather than nowhere.
- */
-function PlaceStub({ cellId, onBack }) {
-  return (
-    <Panel title="Place detail"
-           right={<button class="btn" onClick={onBack}>Back to sources</button>}>
-      <Empty
-        icon="construction"
-        title="Not built yet"
-        body={`Cell ${cellId ?? "—"} is selected. The per-place history view is
-               still to come; the selection card on the sources page carries
-               the scoring detail in the meantime.`}
-      />
-    </Panel>
-  );
-}
+// Selecting a source anywhere opens its investigation page.
+const openSource = (cellId) => cellId && go(`investigation/${cellId}`);
+
+const PAGES = {
+  dashboard: Dashboard, search: Search, investigation: Investigation,
+  assessment: Assessment, anomaly: Anomaly, alerts: Alerts, fires: Fires,
+  classification: Classification, reports: Reports, layers: DataLayers,
+  system: System,
+};
 
 export function App() {
-  const [page, setPage] = useState("industrial");
-  const [selected, setSelected] = useState(null);
+  const route = useRoute();
   const [error, setError] = useState(null);
 
-  // One cheap probe so an unreachable API gets a real screen instead of an
-  // empty shell. The pages fetch their own data independently of this.
-  useEffect(() => {
-    api.summary().catch((e) => setError(e.message));
-  }, []);
+  // One cheap probe so an unreachable API gets a real screen, not an empty shell.
+  useEffect(() => { api.summary().catch((e) => setError(e.message)); }, []);
 
-  if (error) return <ErrorScreen message={error} />;
-
+  const Page = PAGES[route.page] || Dashboard;
   return (
-    <Shell page={page} onNavigate={setPage}>
-      {page === "fires" ? (
-        <Fires />
-      ) : page === "classification" ? (
-        <Classification selected={selected} onSelect={setSelected} />
-      ) : page === "model" ? (
-        <ModelReport />
-      ) : page === "place" ? (
-        <PlaceStub cellId={selected} onBack={() => setPage("industrial")} />
-      ) : (
-        <Industrial
-          selected={selected}
-          onSelect={setSelected}
-          onOpenPlace={(cellId) => { setSelected(cellId); setPage("place"); }}
-        />
-      )}
+    <Shell route={route}>
+      {error ? <ErrorScreen message={error} />
+             : <Page route={route} selected={route.param ? Number(route.param) : null} onSelect={openSource} />}
     </Shell>
   );
 }

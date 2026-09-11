@@ -189,6 +189,12 @@ def get_alerts(
     event_class: Optional[EventClass] = Query(
         None, description="Filter by classified thermal event type"
     ),
+    date: Optional[str] = Query(
+        None, pattern=r"^\d{4}-\d{2}-\d{2}$", description="Acquisition date, YYYY-MM-DD"
+    ),
+    known: Optional[bool] = Query(
+        None, description="true = place has 2025 history, false = brand new location"
+    ),
     min_score: float = Query(0, ge=0, le=100),
     confirmed_only: bool = Query(
         False, description="Only alerts near a known thermal power plant"
@@ -206,6 +212,14 @@ def get_alerts(
     if event_class:
         where.append("event_class = %s")
         params.append(event_class)
+
+    if date:
+        where.append("acq_date = %s")
+        params.append(date)
+
+    if known is not None:
+        where.append("known_place = %s")
+        params.append(known)
 
     box = parse_bbox(bbox)
     if box:
@@ -241,10 +255,39 @@ def get_alerts(
     return {"total_matching": total, "returned": len(rows), "alerts": rows}
 
 
+@app.get("/api/alerts/dates")
+def alert_dates(limit: int = Query(14, ge=1, le=60)):
+    """Observation dates present in the alert table, newest first.
+
+    Drives the dashboard date selector: each row is enough to fill the
+    operational summary tiles for that day without another round trip.
+    """
+    with get_cursor() as cur:
+        cur.execute(
+            """
+            SELECT acq_date::text                              AS date,
+                   count(*)                                    AS detections,
+                   count(*) FILTER (WHERE known_place)         AS known,
+                   count(*) FILTER (WHERE NOT known_place)     AS new_locations,
+                   count(*) FILTER (WHERE alert_level = 'High') AS high,
+                   count(DISTINCT cell_id) FILTER (WHERE known_place) AS known_places
+            FROM alerts
+            GROUP BY acq_date
+            ORDER BY acq_date DESC
+            LIMIT %s;
+            """,
+            [limit],
+        )
+        rows = cur.fetchall()
+    return {"count": len(rows), "dates": rows}
+
+
 @app.get("/api/alerts/geojson")
 def alerts_geojson(
     level: Optional[AlertLevel] = Query(None),
     event_class: Optional[EventClass] = Query(None),
+    date: Optional[str] = Query(None, pattern=r"^\d{4}-\d{2}-\d{2}$"),
+    known: Optional[bool] = Query(None),
     bbox: Optional[str] = Query(None),
     limit: int = Query(1000, ge=1, le=5000),
     one_per_place: bool = Query(
@@ -265,6 +308,14 @@ def alerts_geojson(
     if event_class:
         where.append("event_class = %s")
         params.append(event_class)
+
+    if date:
+        where.append("acq_date = %s")
+        params.append(date)
+
+    if known is not None:
+        where.append("known_place = %s")
+        params.append(known)
 
     box = parse_bbox(bbox)
     if box:

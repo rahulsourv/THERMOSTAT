@@ -1,157 +1,210 @@
 @import "tailwindcss";
 
 /*
-  ThermoStats Scientific — design tokens from the Stitch design system.
-  Colour is strictly semantic here: it encodes severity, certainty and
-  classification. It is never decorative.
+  ThermoStats — neo-brutalist console.
+
+  Lime ground, black 2px rules, flat white surfaces and a hard offset shadow.
+  The look is deliberately loud at the frame and quiet inside it: structure is
+  high-contrast so the eye finds panels instantly, while colour inside a panel
+  stays strictly semantic (severity, certainty, class) and is never
+  decoration.
+
+  Token NAMES are kept from the previous design so every existing component
+  re-skins by value alone. Dark mode redefines the same names under
+  [data-theme="dark"] on <html>.
 */
 @theme {
-  --font-sans: "Inter", ui-sans-serif, system-ui, -apple-system, sans-serif;
+  --font-sans: "Urbanist", ui-sans-serif, system-ui, -apple-system, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
 
   /* structure */
-  --color-canvas: #f6f7f9;
+  --color-canvas: #d8f5a9;       /* lime ground */
+  --color-accent: #d8f5a9;
+  --color-accent-deep: #c9f090;
   --color-panel: #ffffff;
-  --color-rule: #e3e6ea;
-  --color-edge: #cbd5e1;
-  --color-wash: #f8fafc;
-  --color-ink: #0f172a;
-  --color-muted: #64748b;
+  --color-rule: #000000;          /* panel borders */
+  --color-edge: #000000;
+  --color-hair: #e4e4e7;          /* inner row dividers */
+  --color-wash: #f4f4f5;
+  --color-ink: #000000;
+  --color-ink-2: #27272a;
+  --color-muted: #52525b;
+  --color-bar: #000000;           /* header */
 
   /* telemetry semantics */
-  --color-high: #dc2626;
-  --color-medium: #f59e0b;
-  --color-low: #2563eb;
+  --color-high: #b91c1c;
+  --color-medium: #b45309;
+  --color-low: #1d4ed8;
   --color-volcano: #7c3aed;
-  --color-confirmed: #16a34a;
+  --color-confirmed: #15803d;
   --color-fire-large: #b91c1c;
   --color-fire-moderate: #ea580c;
-  --color-fire-small: #eab308;
+  --color-fire-small: #ca8a04;
 
-  --radius-panel: 10px;
-  --radius-control: 6px;
+  --radius-panel: 0px;
+  --radius-control: 0px;
 }
 
-/*
-  Tabular figures are not cosmetic here. Live telemetry, coordinates and
-  scores update constantly; without tnum the digits have different widths
-  and every column jitters as numbers change.
-*/
-html {
-  font-feature-settings: "tnum" 1, "cv05" 1;
+/* Dark: same names, new values. Accent lime becomes the highlight. */
+[data-theme="dark"] {
+  --color-canvas: #09090b;
+  --color-panel: #141417;
+  --color-rule: #3f3f46;
+  --color-edge: #3f3f46;
+  --color-hair: #27272a;
+  --color-wash: #1c1c21;
+  --color-ink: #ffffff;
+  --color-ink-2: #e4e4e7;
+  --color-muted: #a1a1aa;
+  --color-bar: #000000;
+  --color-high: #ef4444;
+  --color-medium: #f59e0b;
+  --color-low: #3b82f6;
+  --color-confirmed: #22c55e;
 }
+
+html { font-feature-settings: "tnum" 1; color-scheme: light; }
+html[data-theme="dark"] { color-scheme: dark; }
 
 body {
   margin: 0;
   background: var(--color-canvas);
   color: var(--color-ink);
   font-family: var(--font-sans);
-  font-size: 13px;
-  line-height: 18px;
+  font-size: 14px;
+  line-height: 20px;
   -webkit-font-smoothing: antialiased;
 }
 
 .material-symbols-outlined {
-  font-variation-settings: "FILL" 0, "wght" 400, "GRAD" 0, "opsz" 20;
+  font-variation-settings: "FILL" 0, "wght" 500, "GRAD" 0, "opsz" 20;
   font-size: 18px;
   line-height: 1;
   user-select: none;
 }
 
+:focus-visible { outline: 3px solid var(--color-ink); outline-offset: 2px; }
+
 @layer components {
-  /* Base modular surface. Depth comes from a crisp border plus the
-     faintest ambient shadow — never a heavy drop shadow. */
+  /* The one surface. Hard offset shadow, no radius, no blur. */
   .panel {
     background: var(--color-panel);
-    border: 1px solid var(--color-rule);
-    border-radius: var(--radius-panel);
-    box-shadow: 0 1px 2px 0 rgb(15 23 42 / 0.04);
+    border: 2px solid var(--color-rule);
+    border-radius: 0;
+    box-shadow: 4px 4px 0 var(--color-rule);
+  }
+  .panel-flat {
+    background: var(--color-panel);
+    border: 2px solid var(--color-rule);
   }
 
   .label-caps {
     font-size: 11px;
-    font-weight: 600;
-    letter-spacing: 0.06em;
-    text-transform: uppercase;
-    color: var(--color-muted);
-  }
-
-  /* Status pills: tinted ground, solid hairline border, semantic text.
-     Full pill radius so they never read as clickable buttons. */
-  .pill {
-    display: inline-flex;
-    align-items: center;
-    gap: 5px;
-    height: 20px;
-    padding: 0 8px;
-    border-radius: 9999px;
-    font-size: 10px;
     font-weight: 700;
     letter-spacing: 0.08em;
     text-transform: uppercase;
-    white-space: nowrap;
-    border: 1px solid transparent;
+    color: var(--color-ink-2);
   }
-  .pill-dot { width: 5px; height: 5px; border-radius: 9999px; flex: none; }
+  .mono { font-family: var(--font-mono); font-variant-numeric: tabular-nums; }
+
+  /* Page title block: eyebrow chip, huge tracked title, subtitle, rule. */
+  .page-eyebrow {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: var(--color-bar); color: var(--color-accent);
+    font-size: 11px; font-weight: 800; letter-spacing: 0.1em;
+    text-transform: uppercase; padding: 5px 10px;
+  }
+  .page-title {
+    font-size: clamp(26px, 3.4vw, 40px); line-height: 1.05;
+    font-weight: 900; letter-spacing: 0.06em; text-transform: uppercase;
+    margin: 14px 0 6px;
+  }
+  .page-sub {
+    font-size: 12px; font-weight: 700; letter-spacing: 0.08em;
+    text-transform: uppercase; color: var(--color-ink-2); margin: 0;
+  }
+
+  /* Numbered section header: "01  OPERATIONAL SUMMARY ........ note" */
+  .section-head {
+    display: flex; align-items: baseline; gap: 12px; flex-wrap: wrap;
+    border-bottom: 2px solid var(--color-rule);
+    padding-bottom: 10px; margin: 34px 0 16px;
+  }
+  .section-head .idx { font-family: var(--font-mono); font-size: 13px; color: var(--color-muted); }
+  .section-head h2 {
+    margin: 0; font-size: 22px; font-weight: 900;
+    letter-spacing: 0.06em; text-transform: uppercase;
+  }
+  .section-head .note {
+    margin-left: auto; font-size: 11px; font-weight: 700;
+    letter-spacing: 0.08em; text-transform: uppercase; color: var(--color-ink-2);
+  }
+
+  /* Status chip: square, bordered, uppercase. */
+  .pill {
+    display: inline-flex; align-items: center; gap: 5px;
+    height: 20px; padding: 0 7px; border-radius: 0;
+    font-size: 10px; font-weight: 800; letter-spacing: 0.08em;
+    text-transform: uppercase; white-space: nowrap;
+    border: 1.5px solid transparent;
+  }
+  .pill-dot { width: 6px; height: 6px; border-radius: 0; flex: none; }
 
   .btn {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    height: 32px;
-    padding: 0 12px;
-    border-radius: var(--radius-control);
-    font-size: 12px;
-    font-weight: 600;
-    cursor: pointer;
-    border: 1px solid var(--color-edge);
-    background: var(--color-panel);
-    color: var(--color-ink);
-    font-family: inherit;
-    white-space: nowrap;
+    display: inline-flex; align-items: center; justify-content: center; gap: 7px;
+    height: 36px; padding: 0 14px; border-radius: 0;
+    font-size: 12px; font-weight: 800; letter-spacing: 0.06em;
+    text-transform: uppercase; cursor: pointer;
+    border: 2px solid var(--color-rule);
+    background: var(--color-panel); color: var(--color-ink);
+    font-family: inherit; white-space: nowrap;
+    transition: transform .08s ease, box-shadow .08s ease;
   }
-  .btn:hover { background: var(--color-wash); }
-  .btn-primary {
-    background: var(--color-ink);
-    border-color: var(--color-ink);
-    color: #fff;
-  }
-  .btn-primary:hover { background: #1e293b; }
+  .btn:hover { transform: translate(-2px, -2px); box-shadow: 3px 3px 0 var(--color-rule); }
+  .btn:active { transform: none; box-shadow: none; }
+  .btn:disabled { opacity: .45; cursor: not-allowed; transform: none; box-shadow: none; }
+  .btn-primary { background: var(--color-bar); border-color: var(--color-bar); color: #fff; }
+  [data-theme="dark"] .btn-primary { background: var(--color-accent); border-color: var(--color-accent); color: #000; }
+  .btn-accent { background: var(--color-accent); border-color: var(--color-rule); color: #000; }
 
-  /* Dense analytical table: 32px rows, right-aligned numerics. */
+  .field {
+    height: 36px; padding: 0 10px; border: 2px solid var(--color-rule);
+    background: var(--color-panel); color: var(--color-ink);
+    font: 600 13px var(--font-sans); border-radius: 0;
+  }
+  .field-mono { font-family: var(--font-mono); font-size: 12px; }
+
+  /* Data table: black header band, mono numerics. */
   .tbl { width: 100%; border-collapse: collapse; }
   .tbl thead th {
-    background: var(--color-wash);
-    border-bottom: 1px solid var(--color-rule);
-    font-size: 11px;
-    font-weight: 600;
-    letter-spacing: 0.06em;
-    text-transform: uppercase;
-    color: var(--color-muted);
-    text-align: left;
-    padding: 8px 12px;
-    white-space: nowrap;
+    background: var(--color-bar); color: #fff;
+    font-size: 11px; font-weight: 800; letter-spacing: 0.06em;
+    text-transform: uppercase; text-align: left;
+    padding: 10px 12px; white-space: nowrap;
   }
   .tbl tbody td {
-    border-bottom: 1px solid #f1f5f9;
-    padding: 7px 12px;
-    height: 32px;
-    white-space: nowrap;
+    border-bottom: 1px solid var(--color-hair);
+    padding: 9px 12px; white-space: nowrap; vertical-align: top;
   }
   .tbl tbody tr:hover { background: var(--color-wash); }
   .num { text-align: right; font-variant-numeric: tabular-nums; }
+
+  .kpi-value { font-family: var(--font-mono); font-size: 26px; font-weight: 700; line-height: 1; }
 }
 
-/* Leaflet needs to inherit the app's type, and its popups should match
-   the panel language rather than Leaflet's defaults. */
-.leaflet-container { font: inherit; background: #eef1f6; }
-.leaflet-popup-content-wrapper {
-  border-radius: 8px;
-  box-shadow: 0 10px 15px -3px rgb(15 23 42 / 0.08),
-              0 4px 6px -4px rgb(15 23 42 / 0.04);
-}
+/* Leaflet in the same language: square controls, hard-shadow popups. */
+.leaflet-container { font: inherit; background: #e4e4e7; }
+.leaflet-bar { border: 2px solid #000 !important; border-radius: 0 !important; box-shadow: none !important; }
+.leaflet-bar a { border-radius: 0 !important; color: #000 !important; }
+.leaflet-popup-content-wrapper { border-radius: 0; border: 2px solid #000; box-shadow: 4px 4px 0 #000; }
+.leaflet-popup-tip { border: 2px solid #000; }
 .leaflet-popup-content { margin: 10px 12px; font-size: 12px; line-height: 17px; }
 
-::-webkit-scrollbar { width: 8px; height: 8px; }
-::-webkit-scrollbar-thumb { background: #dfe3e8; border-radius: 9999px; }
-::-webkit-scrollbar-thumb:hover { background: var(--color-edge); }
-::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar { width: 10px; height: 10px; }
+::-webkit-scrollbar-thumb { background: var(--color-ink); }
+::-webkit-scrollbar-track { background: var(--color-canvas); }
+
+@media (prefers-reduced-motion: reduce) {
+  .btn { transition: none; }
+  .btn:hover { transform: none; }
+}

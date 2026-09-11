@@ -3,6 +3,14 @@ import L from "leaflet";
 import { SEMANTIC } from "./ui.jsx";
 import { classInfo, FAMILY_TONE, gmapsUrl } from "../api.js";
 
+// Key-free basemaps only: CARTO's raster endpoint started demanding an API key
+// and answering 400, which is why it is not offered here.
+const TILES = {
+  osm: { url: "https://tile.openstreetmap.org/{z}/{x}/{y}.png", attr: "&copy; OpenStreetMap contributors" },
+  satellite: { url: "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}", attr: "Esri, Maxar, Earthstar Geographics" },
+  topo: { url: "https://server.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer/tile/{z}/{y}/{x}", attr: "Esri, HERE, Garmin, OpenStreetMap" },
+};
+
 /**
  * Leaflet map. Draws either industrial places or fire events.
  *
@@ -22,11 +30,13 @@ export function AlertMap({
   selectedCellId,
   mode = "industrial",
   colourBy = "level",
+  basemap = "osm",
   height = 520,
 }) {
   const containerRef = useRef(null);
   const mapRef = useRef(null);
   const layerRef = useRef(null);
+  const tileRef = useRef(null);
   const [view, setView] = useState({ lat: 20, lon: 10, zoom: 2 });
 
   useEffect(() => {
@@ -45,7 +55,7 @@ export function AlertMap({
     // noWrap stops the world repeating endlessly left to right.
     // CARTO's voyager endpoint now requires an API key and answers 400 for
     // anonymous requests, so this uses OSM's own key-free tile server.
-    L.tileLayer(
+    tileRef.current = L.tileLayer(
       "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
       {
         attribution: "&copy; OpenStreetMap contributors",
@@ -158,6 +168,16 @@ export function AlertMap({
       },
     }).addTo(map);
   }, [geojson, selectedCellId, mode, colourBy]);
+
+  // Swap the basemap in place so the view (pan, zoom) survives the change.
+  useEffect(() => {
+    const map = mapRef.current;
+    if (!map) return;
+    const t = TILES[basemap] || TILES.osm;
+    if (tileRef.current) tileRef.current.remove();
+    tileRef.current = L.tileLayer(t.url, { attribution: t.attr, noWrap: true, maxZoom: 19 }).addTo(map);
+    tileRef.current.bringToBack();
+  }, [basemap]);
 
   const count = geojson?.features?.length ?? 0;
 
