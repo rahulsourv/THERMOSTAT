@@ -1,0 +1,155 @@
+{
+  "dataset": "Global High-Energy-Consuming Industry Heat Source v3.0 (Ma et al., 2023-08-16)",
+  "source_sensor": "NPP-VIIRS 375 m active fire, 2012-01-20 to 2021-12-31",
+  "crs": "WGS84 geographic (EPSG:4326) - same as ThermoStats, no reprojection needed",
+  "total_records": 25544,
+  "fields": [
+    "Points_num",
+    "Min_date",
+    "Max_date",
+    "date2012_p",
+    "date2013_p",
+    "date2014_p",
+    "date2015_p",
+    "date2016_p",
+    "date2017_p",
+    "date2018_p",
+    "date2019_p",
+    "date2020_p",
+    "date2021_p",
+    "CONTINENT",
+    "area",
+    "Type",
+    "Nation",
+    "Locations",
+    "ORIG_FID"
+  ],
+  "industry_type_fields_found": [
+    "Type"
+  ],
+  "records_per_class": {
+    "0": {
+      "n": 23231,
+      "meaning": "verified industrial heat source"
+    },
+    "1": {
+      "n": 1671,
+      "meaning": "verified NOT an industrial heat source"
+    },
+    "2": {
+      "n": 642,
+      "meaning": "uncertain"
+    }
+  },
+  "invalid_coordinates": 0,
+  "duplicates": {
+    "exact_coordinate": 0,
+    "same_to_4dp_about_11m": 80
+  },
+  "time_coverage": {
+    "declared": "2012-01-20 to 2021-12-31",
+    "min_date_valid": 25247,
+    "min_date_corrupt_or_blank": 297,
+    "max_date_valid": 22593,
+    "max_date_corrupt_or_blank": 2951,
+    "example_corrupt": [
+      "0201-12-10",
+      "0201-12-11",
+      "0201-12-12",
+      "0201-12-13",
+      "0201-12-20",
+      "0201-12-21"
+    ]
+  },
+  "objects_active_per_year": {
+    "date2012_p": 14418,
+    "date2013_p": 15417,
+    "date2014_p": 16328,
+    "date2015_p": 16518,
+    "date2016_p": 16358,
+    "date2017_p": 16566,
+    "date2018_p": 16473,
+    "date2019_p": 16350,
+    "date2020_p": 15038,
+    "date2021_p": 14723
+  },
+  "geographic_coverage": {
+    "bbox": [
+      -175.07066,
+      -77.52687000000003,
+      179.38147294117655,
+      72.14381000000003
+    ],
+    "by_continent": {
+      "Asia": 10278,
+      "Europe": 5200,
+      "North America": 4237,
+      "Africa": 1850,
+      "South America": 1846,
+      "Sea": 1545,
+      "Oceania": 371,
+      "(unassigned)": 215,
+      "Antarctica": 2
+    },
+    "top_nations": {
+      "China": 4715,
+      "Russia": 4015,
+      "United States of America": 3504,
+      "(unassigned)": 1421,
+      "India": 916,
+      "Iran": 773,
+      "Brazil": 715,
+      "Saudi Arabia": 617,
+      "Indonesia": 505,
+      "Algeria": 358,
+      "Canada": 344,
+      "Iraq": 334,
+      "Australia": 329,
+      "Argentina": 313,
+      "Turkmenistan": 311
+    }
+  },
+  "india_records": 1166,
+  "india_verified_ihs": 1047,
+  "overlap_with_thermostats": {
+    "match_radius_km": 4.0,
+    "ihs_matching_one_of_our_cells": 14816,
+    "ihs_with_no_cell_within_radius": 10728,
+    "distinct_cells_touched": 9426
+  },
+  "agreement_with_stage1": {
+    "verified_ihs_matched": 13743,
+    "of_those_our_p_ge_0.9": 6674,
+    "of_those_our_p_lt_0.5": 5824,
+    "verified_non_ihs_matched": 762,
+    "non_ihs_our_p_ge_0.9": 124
+  },
+  "label_leakage": {
+    "within_3km_of_an_osm_feature": 6588,
+    "within_2km_of_a_wri_plant": 1938,
+    "within_10km_of_a_volcano": 156,
+    "independent_of_both_osm_and_wri": 18035,
+    "note": "Objects overlapping OSM/WRI are NOT new evidence - our stage-2 model already trains on those exact labels, so scoring against them would be marking our own homework. The independent subset is the honest evaluation set."
+  },
+  "usability": {
+    "stage1_persistent_source_detection": {
+      "usable_records": 24902,
+      "positives": 23231,
+      "negatives": 1671,
+      "verdict": "STRONG - verified positives and, rarer and more valuable, verified negatives"
+    },
+    "stage2a_industrial_vs_natural": {
+      "usable_records": 1671,
+      "verdict": "STRONG - the 'not industrial' class is exactly the negative we lack"
+    },
+    "stage2b_exact_industry": {
+      "usable_records": 0,
+      "verdict": "NONE - the dataset carries no industry-type field at all"
+    },
+    "unusable": {
+      "uncertain_type_2": 642,
+      "invalid_coordinates": 0,
+      "corrupt_max_date": 2951
+    }
+  }
+}

@@ -1,0 +1,131 @@
+{
+  "purpose": "Ablation: does adding field-verified IHS labels improve stage 1?",
+  "promoted": false,
+  "production_model_untouched": "models/hotspot_static_source_model.joblib",
+  "candidate_model": "models\\hotspot_static_source_model_v3.joblib",
+  "labelled_cells": 687289,
+  "from_ihs": 8210,
+  "from_firms": 679079,
+  "conflicting_cells_dropped": 211,
+  "wri_guard_km": 2.0,
+  "wri_note": "IHS objects near a WRI plant were excluded from training so the WRI independent validation stays independent.",
+  "results": {
+    "A_firms_only": [
+      {
+        "subset": "field-verified IHS cells (the yardstick)",
+        "n": 8210,
+        "positives": 7784,
+        "pr_auc": 0.9847,
+        "roc_auc": 0.8099,
+        "prec_at_100": 0.98
+      },
+      {
+        "subset": "FIRMS-only cells",
+        "n": 679079,
+        "positives": 1131,
+        "pr_auc": 0.7779,
+        "roc_auc": 0.9982,
+        "prec_at_100": 0.92
+      },
+      {
+        "subset": "all labelled cells",
+        "n": 687289,
+        "positives": 8915,
+        "pr_auc": 0.6566,
+        "roc_auc": 0.9152,
+        "prec_at_100": 0.97
+      }
+    ],
+    "B_merged": [
+      {
+        "subset": "field-verified IHS cells (the yardstick)",
+        "n": 8210,
+        "positives": 7784,
+        "pr_auc": 0.9862,
+        "roc_auc": 0.819,
+        "prec_at_100": 1.0
+      },
+      {
+        "subset": "FIRMS-only cells",
+        "n": 679079,
+        "positives": 1131,
+        "pr_auc": 0.7586,
+        "roc_auc": 0.9988,
+        "prec_at_100": 0.89
+      },
+      {
+        "subset": "all labelled cells",
+        "n": 687289,
+        "positives": 8915,
+        "pr_auc": 0.6827,
+        "roc_auc": 0.9543,
+        "prec_at_100": 0.97
+      }
+    ]
+  },
+  "hard_negatives": {
+    "A_firms_only": {
+      "n": 426,
+      "median_score": 0.0027,
+      "wrongly_scored_above_0.9": 25,
+      "false_positive_rate": 0.0587
+    },
+    "B_merged": {
+      "n": 426,
+      "median_score": 0.2865,
+      "wrongly_scored_above_0.9": 63,
+      "false_positive_rate": 0.1479
+    }
+  },
+  "independent_wri_check": {
+    "A_firms_only": {
+      "model": "A_firms_only",
+      "thermal_plants": 11199,
+      "base_rate": 0.002241,
+      "top100": 0.15,
+      "lift100": 66.9,
+      "top500": 0.148,
+      "lift500": 66.1,
+      "top1000": 0.158,
+      "lift1000": 70.5
+    },
+    "B_merged": {
+      "model": "B_merged",
+      "thermal_plants": 11199,
+      "base_rate": 0.002241,
+      "top100": 0.15,
+      "lift100": 66.9,
+      "top500": 0.204,
+      "lift500": 91.0,
+      "top1000": 0.185,
+      "lift1000": 82.6
+    }
+  },
+  "evaluation_caveat": "PR-AUC on the IHS subset is uninformative: that subset is 94.8% positive because IHS is a catalogue of confirmed sources, not a balanced sample, so a constant predictor already scores 0.948. ROC-AUC, the hard negatives and the WRI check are the meaningful reads.",
+  "matched_fp_comparison": {
+    "why": "B's 14.8% FP rate at threshold 0.90 is a CALIBRATION difference, not a regression. Comparing both models at the SAME false-positive rate on the 426 field-verified negatives is the like-for-like read.",
+    "rows": [
+      {
+        "false_positive_rate": 0.059,
+        "A_recall": 0.4916,
+        "B_recall": 0.4584
+      },
+      {
+        "false_positive_rate": 0.1,
+        "A_recall": 0.5708,
+        "B_recall": 0.5903
+      },
+      {
+        "false_positive_rate": 0.15,
+        "A_recall": 0.6677,
+        "B_recall": 0.6684
+      }
+    ],
+    "conclusion": "Essentially tied on hard-case discrimination (differences of ~2-3 points on 426 samples are noise). The real, repeatable gain is in global ranking quality, visible in the independent WRI check.",
+    "n_hard_negatives": 426
+  },
+  "verdict": {
+    "promote_now": false,
+    "summary": "Genuine improvement in ranking (WRI top-500 lift 66.1x -> 91.0x) but no gain on hard-case discrimination, and thresholds are no longer comparable to the production model. Proceed to step 2 (decade features) and re-evaluate the two changes together before promoting anything."
+  }
+}

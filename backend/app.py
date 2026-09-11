@@ -576,6 +576,37 @@ def get_runs(limit: int = Query(20, ge=1, le=200)):
     return {"summary": stats, "runs": runs}
 
 
+@app.get("/api/metrics")
+def metrics():
+    """Every measured result the models produced, in one call.
+
+    Served straight from the JSON files the training scripts write, so the
+    Model Report page can never drift from what was actually measured - there
+    is no number here that a person typed in.
+
+    Any file that has not been produced yet comes back as null rather than an
+    error, so the page can show what exists and say what is missing.
+    """
+    base = Path(__file__).resolve().parents[1] / "ML" / "models"
+
+    def load(name):
+        path = base / name
+        if not path.exists():
+            return None
+        try:
+            return json.loads(path.read_text(encoding="utf-8"))
+        except (OSError, json.JSONDecodeError):
+            return None
+
+    return {
+        "stage1_production": load("model_metrics.json"),
+        "stage1_m2": load("stage1_m2_baseline_spec.json"),
+        "stage1_m2_confusion": load("stage1_m2_confusion.json"),
+        "stage2": load("event_model_metrics.json"),
+        "dbscan": load("dbscan_metrics.json"),
+    }
+
+
 @app.get("/api/places/{cell_id}")
 def get_place(cell_id: int):
     """Drill-down: everything we know about one 5 km place."""

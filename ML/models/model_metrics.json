@@ -1,0 +1,80 @@
+{
+  "_source": "Measured values. Cross-validation and feature importance from src/train_hotspot_model.py; independent validation from src/enrich_and_validate.py (ties broken at random, mean of 200 draws).",
+  "model_version": "hotspot_static_source_model / v2",
+  "trained_on": "2025 VIIRS NOAA-20 archive, 18,466,569 detections",
+  "unit_of_analysis": "one 0.05 degree cell (~5 km), not one detection",
+  "places_scored": 687289,
+  "positive_rate": 0.00615,
+  "features_used": 19,
+  "excluded_features": ["latitude", "longitude", "hour_utc", "month"],
+
+  "headline": {
+    "pr_auc": 0.902,
+    "pr_auc_std": 0.029,
+    "roc_auc": 0.999,
+    "precision_at_100": 0.952,
+    "lift_vs_chance": 68.4
+  },
+
+  "folds": [
+    { "name": "Fold 1", "pr_auc": 0.879 },
+    { "name": "Fold 2", "pr_auc": 0.942 },
+    { "name": "Fold 3", "pr_auc": 0.871 },
+    { "name": "Fold 4", "pr_auc": 0.899 },
+    { "name": "Fold 5", "pr_auc": 0.921 }
+  ],
+
+  "independent_validation": {
+    "ground_truth": "WRI Global Power Plant Database (11,199 thermal plants)",
+    "match_radius_km": 2.0,
+    "base_rate": 0.002241,
+    "note": "This dataset was never a feature and never a label, so it is a genuinely independent test.",
+    "methods": [
+      { "name": "ML model (out-of-fold)", "top100": 0.159, "top500": 0.153, "lift": 68.4, "stable": true },
+      { "name": "NASA type-2 heuristic",  "top100": 0.111, "top500": 0.118, "lift": 52.7, "stable": true },
+      { "name": "active_days alone",      "top100": 0.040, "top500": 0.112, "lift": 50.0, "stable": true },
+      { "name": "night_fraction alone",   "top100": 0.022, "top500": 0.021, "lift": 9.4,  "stable": false },
+      { "name": "Chance",                 "top100": 0.0022, "top500": 0.0022, "lift": 1.0, "stable": true }
+    ]
+  },
+
+  "feature_importance": {
+    "method": "Permutation importance on a held-out spatial fold, scored by average precision",
+    "features": [
+      { "name": "active_days",       "value": 0.676 },
+      { "name": "months_active",     "value": 0.197 },
+      { "name": "night_fraction",    "value": 0.038 },
+      { "name": "peak_month_share",  "value": 0.021 },
+      { "name": "active_neighbours", "value": 0.016 },
+      { "name": "longest_gap_days",  "value": 0.008 },
+      { "name": "total_detections",  "value": 0.005 },
+      { "name": "frp_mean",          "value": 0.004 },
+      { "name": "frp_std",           "value": 0.004 }
+    ]
+  },
+
+  "limitations": [
+    {
+      "title": "Finds persistent heat, not confirmed factories",
+      "body": "The model scores how steadily a place burns. It cannot tell a gas flare from a smelter, a brick kiln or a geothermal vent."
+    },
+    {
+      "title": "16% confirmation does not disprove the rest",
+      "body": "Only 16% of High alerts match a known thermal power plant. The reference database lists power plants, not flares or kilns, so absence from it is not evidence against a site."
+    },
+    {
+      "title": "It does not predict future fires",
+      "body": "Everything here is measured from observations the satellite already made. Forecasting where a fire will start needs weather, fuel dryness and vegetation data this system does not use."
+    },
+    {
+      "title": "Training labels come from NASA's own classification",
+      "body": "The model learns from the FIRMS type field, which is a useful clue rather than audited ground truth. The independent power-plant check exists precisely because of this."
+    }
+  ],
+
+  "superseded": {
+    "note": "An earlier detection-level model reported 0.989 ROC-AUC. That number was inflated: latitude alone scored 0.922 because the model had memorised where oil fields are, and a random train/test split let the same flare appear in both halves. Do not quote it.",
+    "old_roc_auc": 0.989,
+    "latitude_alone_auc": 0.922
+  }
+}

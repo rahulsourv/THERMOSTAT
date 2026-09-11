@@ -18,6 +18,7 @@ export const api = {
   place: (cellId) => get(`/api/places/${cellId}`),
 
   classification: () => get("/api/classification"),
+  metrics: () => get("/api/metrics"),
 
   alerts: ({ level, eventClass, limit = 50, confirmedOnly = false } = {}) => {
     const params = new URLSearchParams({ limit });

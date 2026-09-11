@@ -5,6 +5,7 @@ import { Panel, Empty } from "./components/ui.jsx";
 import { Industrial } from "./pages/Industrial.jsx";
 import { Fires } from "./pages/Fires.jsx";
 import { Classification } from "./pages/Classification.jsx";
+import { ModelReport } from "./pages/ModelReport.jsx";
 
 /**
  * Place detail has no page of its own yet. The alert feed still offers an
@@ -44,6 +45,8 @@ export function App() {
         <Fires />
       ) : page === "classification" ? (
         <Classification selected={selected} onSelect={setSelected} />
+      ) : page === "model" ? (
+        <ModelReport />
       ) : page === "place" ? (
         <PlaceStub cellId={selected} onBack={() => setPage("industrial")} />
       ) : (

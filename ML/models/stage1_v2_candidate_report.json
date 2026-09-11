@@ -1,0 +1,198 @@
+{
+  "candidate": "models\\stage1_v2_candidate.joblib",
+  "promoted": false,
+  "production_untouched": "models/hotspot_static_source_model.joblib",
+  "removed": [
+    "fire_type filter (column no longer read at all)",
+    "type2_fraction target",
+    "static_probability feature"
+  ],
+  "features": [
+    "total_detections",
+    "active_days",
+    "duty_cycle",
+    "span_days",
+    "longest_gap_days",
+    "months_active",
+    "month_cv",
+    "peak_month_share",
+    "night_fraction",
+    "frp_mean",
+    "frp_max",
+    "frp_std",
+    "frp_cv",
+    "ti4_mean",
+    "ti4_std",
+    "ti5_mean",
+    "ti4_minus_ti5_mean",
+    "spread_km",
+    "active_neighbours"
+  ],
+  "label_construction": {
+    "presumed_negative": 658598,
+    "ambiguous": 18777,
+    "verified_positive": 12905,
+    "verified_negative": 592
+  },
+  "trainable_cells": 672095,
+  "positive_rate": 0.0192,
+  "cv": "GroupKFold 5 over 20-degree blocks",
+  "folds": [
+    {
+      "fold": 1,
+      "test_cells": 134419,
+      "test_positives": 1948,
+      "pr_auc": 0.7063,
+      "roc_auc": 0.9671,
+      "prec_at_100": 0.95
+    },
+    {
+      "fold": 2,
+      "test_cells": 134419,
+      "test_positives": 4699,
+      "pr_auc": 0.7881,
+      "roc_auc": 0.957,
+      "prec_at_100": 1.0
+    },
+    {
+      "fold": 3,
+      "test_cells": 134419,
+      "test_positives": 2735,
+      "pr_auc": 0.7017,
+      "roc_auc": 0.9437,
+      "prec_at_100": 0.97
+    },
+    {
+      "fold": 4,
+      "test_cells": 134419,
+      "test_positives": 2245,
+      "pr_auc": 0.6848,
+      "roc_auc": 0.9304,
+      "prec_at_100": 0.97
+    },
+    {
+      "fold": 5,
+      "test_cells": 134419,
+      "test_positives": 1278,
+      "pr_auc": 0.5361,
+      "roc_auc": 0.8915,
+      "prec_at_100": 0.97
+    }
+  ],
+  "overall": {
+    "pr_auc_mean": 0.6834,
+    "pr_auc_std": 0.0819,
+    "pr_auc_pooled": 0.6988,
+    "roc_auc_pooled": 0.9446,
+    "prec_at_100": 0.95,
+    "prec_at_500": 0.944,
+    "brier": 0.05754
+  },
+  "recall_at_threshold": {
+    "0.5": {
+      "recall_verified_pos": 0.8189,
+      "fp_rate_verified_neg": 0.3345
+    },
+    "0.7": {
+      "recall_verified_pos": 0.7562,
+      "fp_rate_verified_neg": 0.2382
+    },
+    "0.9": {
+      "recall_verified_pos": 0.6758,
+      "fp_rate_verified_neg": 0.1503
+    }
+  },
+  "calibration": [
+    {
+      "bin": "0.0-0.1",
+      "n": 335676,
+      "mean_predicted": 0.0433,
+      "observed_rate": 0.0011
+    },
+    {
+      "bin": "0.1-0.2",
+      "n": 150693,
+      "mean_predicted": 0.1445,
+      "observed_rate": 0.0041
+    },
+    {
+      "bin": "0.2-0.3",
+      "n": 75451,
+      "mean_predicted": 0.244,
+      "observed_rate": 0.0071
+    },
+    {
+      "bin": "0.3-0.4",
+      "n": 37495,
+      "mean_predicted": 0.3447,
+      "observed_rate": 0.0119
+    },
+    {
+      "bin": "0.4-0.5",
+      "n": 21663,
+      "mean_predicted": 0.4459,
+      "observed_rate": 0.0167
+    },
+    {
+      "bin": "0.5-0.6",
+      "n": 14474,
+      "mean_predicted": 0.5468,
+      "observed_rate": 0.028
+    },
+    {
+      "bin": "0.6-0.7",
+      "n": 10558,
+      "mean_predicted": 0.6481,
+      "observed_rate": 0.0383
+    },
+    {
+      "bin": "0.7-0.8",
+      "n": 7804,
+      "mean_predicted": 0.7481,
+      "observed_rate": 0.0552
+    },
+    {
+      "bin": "0.8-0.9",
+      "n": 5505,
+      "mean_predicted": 0.8476,
+      "observed_rate": 0.1103
+    },
+    {
+      "bin": "0.9-1.0",
+      "n": 12776,
+      "mean_predicted": 0.9765,
+      "observed_rate": 0.6826
+    }
+  ],
+  "independent_wri": {
+    "base_rate": 0.002372,
+    "top100": 0.16,
+    "lift100": 67.5,
+    "top500": 0.168,
+    "lift500": 70.8,
+    "top1000": 0.18,
+    "lift1000": 75.9
+  },
+  "single_feature_auc": {
+    "total_detections": 0.6074,
+    "active_days": 0.7255,
+    "duty_cycle": 0.5117,
+    "span_days": 0.7458,
+    "longest_gap_days": 0.5419,
+    "months_active": 0.7962,
+    "month_cv": 0.5213,
+    "peak_month_share": 0.7989,
+    "night_fraction": 0.8444,
+    "frp_mean": 0.8557,
+    "frp_max": 0.7735,
+    "frp_std": 0.8056,
+    "frp_cv": 0.5893,
+    "ti4_mean": 0.8687,
+    "ti4_std": 0.5634,
+    "ti5_mean": 0.8344,
+    "ti4_minus_ti5_mean": 0.7653,
+    "spread_km": 0.6938,
+    "active_neighbours": 0.8146
+  },
+  "caveat": "Not directly comparable with the 0.902 production PR-AUC: that was measured against NASA's own type flag on a NASA-filtered population. This is measured against field-verified labels on the full population. Different question, different denominator."
+}

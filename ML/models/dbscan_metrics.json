@@ -1,0 +1,207 @@
+{
+  "algorithm": "DBSCAN",
+  "metric": "haversine (great-circle, eps in km)",
+  "clustered_on": "persistent places, static_probability >= 0.9, one 0.05 degree cell per point",
+  "parameters": {
+    "eps_km": 8.0,
+    "min_samples": 3
+  },
+  "points": 5460,
+  "clusters": 278,
+  "noise_points": 4402,
+  "noise_pct": 80.62,
+  "clustered_points": 1058,
+  "largest_cluster": 13,
+  "smallest_cluster": 3,
+  "mean_cluster_size": 3.81,
+  "median_cluster_size": 3.0,
+  "silhouette": 0.8706,
+  "osm_validation": {
+    "features_available": 53053,
+    "match_radius_km": 3.0,
+    "batches_completed": 173,
+    "places_surveyed_pct": 100.0,
+    "clusters_confirmed": 241,
+    "clusters_contradicted": 37,
+    "clusters_unchecked": 0,
+    "confirmed_pct_of_testable": 86.7,
+    "by_industry": {
+      "industrial_works": 66,
+      "gas_flare": 64,
+      "power_plant": 37,
+      "mining": 36,
+      "oil_refinery": 22,
+      "smelter": 13,
+      "kiln": 3
+    }
+  },
+  "sweep": [
+    {
+      "eps_km": 4.0,
+      "min_samples": 2,
+      "clusters": 787,
+      "noise_pct": 68.3,
+      "largest": 5,
+      "osm_confirmed": 593,
+      "confirmed_pct": 75.3
+    },
+    {
+      "eps_km": 4.0,
+      "min_samples": 3,
+      "clusters": 117,
+      "noise_pct": 92.9,
+      "largest": 5,
+      "osm_confirmed": 104,
+      "confirmed_pct": 88.9
+    },
+    {
+      "eps_km": 4.0,
+      "min_samples": 5,
+      "clusters": 3,
+      "noise_pct": 99.7,
+      "largest": 5,
+      "osm_confirmed": 3,
+      "confirmed_pct": 100.0
+    },
+    {
+      "eps_km": 6.0,
+      "min_samples": 2,
+      "clusters": 934,
+      "noise_pct": 60.1,
+      "largest": 11,
+      "osm_confirmed": 713,
+      "confirmed_pct": 76.3
+    },
+    {
+      "eps_km": 6.0,
+      "min_samples": 3,
+      "clusters": 208,
+      "noise_pct": 86.7,
+      "largest": 11,
+      "osm_confirmed": 179,
+      "confirmed_pct": 86.1
+    },
+    {
+      "eps_km": 6.0,
+      "min_samples": 5,
+      "clusters": 13,
+      "noise_pct": 98.8,
+      "largest": 7,
+      "osm_confirmed": 12,
+      "confirmed_pct": 92.3
+    },
+    {
+      "eps_km": 8.0,
+      "min_samples": 2,
+      "clusters": 986,
+      "noise_pct": 54.7,
+      "largest": 13,
+      "osm_confirmed": 771,
+      "confirmed_pct": 78.2
+    },
+    {
+      "eps_km": 8.0,
+      "min_samples": 3,
+      "clusters": 278,
+      "noise_pct": 80.6,
+      "largest": 13,
+      "osm_confirmed": 241,
+      "confirmed_pct": 86.7
+    },
+    {
+      "eps_km": 8.0,
+      "min_samples": 5,
+      "clusters": 34,
+      "noise_pct": 96.3,
+      "largest": 10,
+      "osm_confirmed": 32,
+      "confirmed_pct": 94.1
+    },
+    {
+      "eps_km": 12.0,
+      "min_samples": 2,
+      "clusters": 1032,
+      "noise_pct": 46.2,
+      "largest": 21,
+      "osm_confirmed": 824,
+      "confirmed_pct": 79.8
+    },
+    {
+      "eps_km": 12.0,
+      "min_samples": 3,
+      "clusters": 374,
+      "noise_pct": 70.3,
+      "largest": 21,
+      "osm_confirmed": 329,
+      "confirmed_pct": 88.0
+    },
+    {
+      "eps_km": 12.0,
+      "min_samples": 5,
+      "clusters": 94,
+      "noise_pct": 88.7,
+      "largest": 18,
+      "osm_confirmed": 88,
+      "confirmed_pct": 93.6
+    },
+    {
+      "eps_km": 20.0,
+      "min_samples": 2,
+      "clusters": 991,
+      "noise_pct": 35.7,
+      "largest": 53,
+      "osm_confirmed": 822,
+      "confirmed_pct": 82.9
+    },
+    {
+      "eps_km": 20.0,
+      "min_samples": 3,
+      "clusters": 436,
+      "noise_pct": 56.0,
+      "largest": 53,
+      "osm_confirmed": 389,
+      "confirmed_pct": 89.2
+    },
+    {
+      "eps_km": 20.0,
+      "min_samples": 5,
+      "clusters": 159,
+      "noise_pct": 75.3,
+      "largest": 41,
+      "osm_confirmed": 152,
+      "confirmed_pct": 95.6
+    }
+  ],
+  "cluster_size_distribution": {
+    "221": 13,
+    "114": 12,
+    "127": 11,
+    "212": 10,
+    "99": 8,
+    "135": 8,
+    "197": 8,
+    "234": 8,
+    "11": 7,
+    "45": 7,
+    "74": 7,
+    "175": 7,
+    "187": 7,
+    "49": 6,
+    "66": 6,
+    "87": 6,
+    "89": 6,
+    "105": 6,
+    "119": 6,
+    "120": 6,
+    "130": 6,
+    "150": 6,
+    "160": 6,
+    "233": 6,
+    "64": 5,
+    "1": 5,
+    "3": 5,
+    "14": 5,
+    "15": 5,
+    "18": 5
+  }
+}

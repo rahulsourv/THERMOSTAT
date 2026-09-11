@@ -1,0 +1,268 @@
+{
+  "name": "Stage 1 - M2 research baseline",
+  "status": "FROZEN research baseline. NOT promoted to production.",
+  "production_model_still": "models/hotspot_static_source_model.joblib",
+  "frozen_on": "2026-09-07",
+  "artefacts": {
+    "model": "models\\stage1_m2_baseline.joblib",
+    "calibrator": "models\\stage1_m2_calibrator.joblib",
+    "scores": "data\\processed\\stage1_m2_scores.csv",
+    "feature_table": "data\\processed\\hotspot_features_2025_v2.csv",
+    "feature_table_sha256_16": "130ccd0accc44c23",
+    "builder": "src/build_hotspot_dataset_v2.py"
+  },
+  "independence_guarantees": [
+    "NASA fire_type is NOT used in features. build_hotspot_dataset_v2.py does not even read the column from disk.",
+    "NASA fire_type is NOT used in the Stage-1 label. The target is field-verified IHS records (POI + high-resolution imagery).",
+    "type2_fraction is excluded entirely - it is neither computed nor stored by the v2 builder.",
+    "static_probability is excluded from every feature matrix. It was the path by which a NASA-trained scalar re-entered downstream models.",
+    "IHS membership and IHS missingness are NOT predictive features. IHS is used only to construct labels. Its decade columns were tested and rejected: present for 1.37% of cells, and that subset is 87.4% positive against 0.099% elsewhere, so the model would read the label off missingness.",
+    "WRI is absent from features AND labels, so it remains a genuinely independent evaluation set.",
+    "latitude, longitude, first_doy and last_doy remain excluded - latitude alone once scored 0.922 AUC by memorising oil-field geography."
+  ],
+  "features": [
+    "total_detections",
+    "active_days",
+    "duty_cycle",
+    "span_days",
+    "longest_gap_days",
+    "months_active",
+    "month_cv",
+    "peak_month_share",
+    "night_fraction",
+    "frp_mean",
+    "frp_max",
+    "frp_std",
+    "frp_cv",
+    "ti4_mean",
+    "ti4_std",
+    "ti5_mean",
+    "ti4_minus_ti5_mean",
+    "spread_km",
+    "active_neighbours"
+  ],
+  "n_features": 19,
+  "label_definition": {
+    "positive": "IHS Type 0 (field-verified industrial) within 4.0 km",
+    "negative_verified": "IHS Type 1 (field-verified NOT industrial) within 4.0 km",
+    "negative_presumed": "no IHS object AND no OSM industrial feature within 10.0 km",
+    "excluded": "everything else (ambiguous)"
+  },
+  "evaluation_protocol": {
+    "cv": "GroupKFold, 5 folds",
+    "blocks": "20-degree spatial blocks",
+    "seed": 42,
+    "discrimination_measured_on": "raw scores",
+    "calibration_measured_separately": true,
+    "independent_check": "WRI thermal plants within 2 km, never trained on"
+  },
+  "discrimination": {
+    "measured_on": "RAW model output (isotonic is monotone and cannot change ranking)",
+    "pr_auc_mean": 0.6839,
+    "pr_auc_std": 0.0802,
+    "pr_auc_pooled": 0.6971,
+    "roc_auc_pooled": 0.9435,
+    "prec_at_100": 0.94,
+    "prec_at_500": 0.948,
+    "spatial_folds": [
+      {
+        "fold": 1,
+        "test_cells": 134419,
+        "positives": 1948,
+        "pr_auc": 0.7091,
+        "roc_auc": 0.9662,
+        "prec_at_100": 0.94
+      },
+      {
+        "fold": 2,
+        "test_cells": 134419,
+        "positives": 4699,
+        "pr_auc": 0.786,
+        "roc_auc": 0.9558,
+        "prec_at_100": 1.0
+      },
+      {
+        "fold": 3,
+        "test_cells": 134419,
+        "positives": 2735,
+        "pr_auc": 0.7011,
+        "roc_auc": 0.9439,
+        "prec_at_100": 0.96
+      },
+      {
+        "fold": 4,
+        "test_cells": 134419,
+        "positives": 2245,
+        "pr_auc": 0.6833,
+        "roc_auc": 0.9296,
+        "prec_at_100": 0.99
+      },
+      {
+        "fold": 5,
+        "test_cells": 134419,
+        "positives": 1278,
+        "pr_auc": 0.5398,
+        "roc_auc": 0.8893,
+        "prec_at_100": 0.99
+      }
+    ],
+    "recall_at_matched_fp": {
+      "fp_5pct": 0.317,
+      "fp_10pct": 0.578,
+      "fp_20pct": 0.7183
+    },
+    "independent_wri": {
+      "base_rate": 0.002372,
+      "lift100": 84.3,
+      "lift500": 64.1,
+      "lift1000": 66.6
+    }
+  },
+  "calibration": {
+    "method": "isotonic regression, fitted out-of-fold on a 20% split of each training block",
+    "note": "Does not affect discrimination. Ranking metrics above are unchanged by it.",
+    "brier_raw": 0.055439,
+    "brier_calibrated": 0.008652,
+    "max_gap_raw": 0.736,
+    "max_gap_calibrated": 0.0866,
+    "reliability_raw": [
+      {
+        "bin": "0.0-0.1",
+        "n": 345260,
+        "predicted": 0.0439,
+        "observed": 0.0012
+      },
+      {
+        "bin": "0.1-0.2",
+        "n": 148310,
+        "predicted": 0.1445,
+        "observed": 0.0044
+      },
+      {
+        "bin": "0.2-0.3",
+        "n": 72189,
+        "predicted": 0.2439,
+        "observed": 0.0071
+      },
+      {
+        "bin": "0.3-0.4",
+        "n": 36231,
+        "predicted": 0.3448,
+        "observed": 0.0121
+      },
+      {
+        "bin": "0.4-0.5",
+        "n": 21157,
+        "predicted": 0.4464,
+        "observed": 0.0176
+      },
+      {
+        "bin": "0.5-0.6",
+        "n": 13836,
+        "predicted": 0.5471,
+        "observed": 0.0287
+      },
+      {
+        "bin": "0.6-0.7",
+        "n": 9900,
+        "predicted": 0.6475,
+        "observed": 0.0391
+      },
+      {
+        "bin": "0.7-0.8",
+        "n": 7214,
+        "predicted": 0.7475,
+        "observed": 0.0589
+      },
+      {
+        "bin": "0.8-0.9",
+        "n": 5416,
+        "predicted": 0.8475,
+        "observed": 0.1115
+      },
+      {
+        "bin": "0.9-1.0",
+        "n": 12582,
+        "predicted": 0.9768,
+        "observed": 0.6913
+      }
+    ],
+    "reliability_calibrated": [
+      {
+        "bin": "0.0-0.1",
+        "n": 654831,
+        "predicted": 0.0057,
+        "observed": 0.0058
+      },
+      {
+        "bin": "0.1-0.2",
+        "n": 4772,
+        "predicted": 0.1365,
+        "observed": 0.1113
+      },
+      {
+        "bin": "0.2-0.3",
+        "n": 1648,
+        "predicted": 0.241,
+        "observed": 0.21
+      },
+      {
+        "bin": "0.3-0.4",
+        "n": 927,
+        "predicted": 0.3466,
+        "observed": 0.26
+      },
+      {
+        "bin": "0.4-0.5",
+        "n": 1119,
+        "predicted": 0.4433,
+        "observed": 0.4147
+      },
+      {
+        "bin": "0.5-0.6",
+        "n": 630,
+        "predicted": 0.5471,
+        "observed": 0.5397
+      },
+      {
+        "bin": "0.6-0.7",
+        "n": 1090,
+        "predicted": 0.6512,
+        "observed": 0.6679
+      },
+      {
+        "bin": "0.7-0.8",
+        "n": 518,
+        "predicted": 0.7483,
+        "observed": 0.805
+      },
+      {
+        "bin": "0.8-0.9",
+        "n": 1327,
+        "predicted": 0.8429,
+        "observed": 0.8666
+      },
+      {
+        "bin": "0.9-1.0",
+        "n": 5233,
+        "predicted": 0.9508,
+        "observed": 0.9392
+      }
+    ],
+    "max_per_fold_roc_drift_from_ties": 0.00076648,
+    "pooled_roc_drift_from_per_fold_calibrators": 0.002031,
+    "ranking_note": "Isotonic never reverses an ordering, but it merges distinct scores into ties, and ROC gives a tie half credit - so AUC can shift a negligible amount in either direction. Asserted per fold below 1e-3. The pooled figure moves a little more because each fold carries its own calibrator; the SHIPPED calibrator is a single isotonic fitted on all out-of-fold scores. Discrimination is quoted from RAW scores throughout, so none of this touches the benchmark."
+  },
+  "population": {
+    "cells": 690872,
+    "trainable": 672095,
+    "positives": 12905,
+    "negatives": 659190,
+    "excluded_ambiguous": 18777
+  },
+  "known_limitations": [
+    "Fold-level PR-AUC ranges roughly 0.54-0.79; regional performance is uneven and the mean hides that.",
+    "Most negatives are presumed rather than verified - only 592 negatives were checked by a person.",
+    "No live inference: scores are precomputed per cell and joined by cell_id, so a location with no 2025 history gets no prediction."
+  ]
+}

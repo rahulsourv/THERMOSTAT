@@ -1,0 +1,53 @@
+{
+  "model": "Stage 1 - M2 frozen research baseline",
+  "scores": "isotonic-calibrated, out-of-fold",
+  "population": 672095,
+  "positives": 12905,
+  "full_population": {
+    "0.5": {
+      "tn": 657942,
+      "fp": 1248,
+      "fn": 5355,
+      "tp": 7550,
+      "precision": 0.8581,
+      "recall": 0.585,
+      "specificity": 0.9981,
+      "f1": 0.6958
+    },
+    "0.9": {
+      "tn": 658872,
+      "fp": 318,
+      "fn": 7990,
+      "tp": 4915,
+      "precision": 0.9392,
+      "recall": 0.3809,
+      "specificity": 0.9995,
+      "f1": 0.542
+    }
+  },
+  "verified_subset": {
+    "note": "Only cells a person checked: IHS field-verified positives and negatives.",
+    "n": 13497,
+    "positives": 12905,
+    "0.5": {
+      "tn": 529,
+      "fp": 63,
+      "fn": 5355,
+      "tp": 7550,
+      "precision": 0.9917,
+      "recall": 0.585,
+      "specificity": 0.8936,
+      "f1": 0.7359
+    },
+    "0.9": {
+      "tn": 552,
+      "fp": 40,
+      "fn": 7990,
+      "tp": 4915,
+      "precision": 0.9919,
+      "recall": 0.3809,
+      "specificity": 0.9324,
+      "f1": 0.5504
+    }
+  }
+}

@@ -1,0 +1,127 @@
+{
+  "model_version": "event_classifier / v1",
+  "task": "SIH26162 stage 2 - thermal event type classification",
+  "trained_on": "GIS-anchored places only (OSM + WRI + Smithsonian GVP)",
+  "training_rows": 6728,
+  "classes": [
+    "gas_flare",
+    "industrial_heat",
+    "mining",
+    "oil_refinery",
+    "thermal_power_plant",
+    "volcano"
+  ],
+  "macro_f1": 0.3141,
+  "macro_f1_std": 0.0294,
+  "baseline_macro_f1": 0.0804,
+  "folds": [
+    0.3139,
+    0.3188,
+    0.2765,
+    0.2963,
+    0.3649
+  ],
+  "per_class": {
+    "gas_flare": {
+      "precision": 0.369,
+      "recall": 0.3181,
+      "f1-score": 0.3417,
+      "support": 877.0
+    },
+    "industrial_heat": {
+      "precision": 0.3248,
+      "recall": 0.384,
+      "f1-score": 0.352,
+      "support": 1690.0
+    },
+    "mining": {
+      "precision": 0.2472,
+      "recall": 0.2055,
+      "f1-score": 0.2244,
+      "support": 954.0
+    },
+    "oil_refinery": {
+      "precision": 0.0725,
+      "recall": 0.0411,
+      "f1-score": 0.0525,
+      "support": 462.0
+    },
+    "thermal_power_plant": {
+      "precision": 0.4433,
+      "recall": 0.4626,
+      "f1-score": 0.4528,
+      "support": 2140.0
+    },
+    "volcano": {
+      "precision": 0.481,
+      "recall": 0.5455,
+      "f1-score": 0.5112,
+      "support": 605.0
+    }
+  },
+  "confusion_matrix": {
+    "labels": [
+      "gas_flare",
+      "industrial_heat",
+      "mining",
+      "oil_refinery",
+      "thermal_power_plant",
+      "volcano"
+    ],
+    "rows_are_truth": [
+      [
+        279,
+        242,
+        58,
+        81,
+        188,
+        29
+      ],
+      [
+        172,
+        649,
+        259,
+        79,
+        478,
+        53
+      ],
+      [
+        48,
+        406,
+        196,
+        20,
+        240,
+        44
+      ],
+      [
+        135,
+        142,
+        38,
+        19,
+        120,
+        8
+      ],
+      [
+        107,
+        534,
+        228,
+        59,
+        990,
+        222
+      ],
+      [
+        15,
+        25,
+        14,
+        4,
+        217,
+        330
+      ]
+    ]
+  },
+  "heuristic_classes": [
+    "agricultural_burning",
+    "wildfire"
+  ],
+  "heuristic_note": "Separated by a documented rule on FRP, day/night mix and seasonality, not by the model. No ground truth exists for them in this dataset, so no accuracy is claimed."
+}

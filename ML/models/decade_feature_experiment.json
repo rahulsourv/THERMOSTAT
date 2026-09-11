@@ -1,0 +1,44 @@
+{
+  "question": "Does a 10-year persistence profile beat our single 2025 year?",
+  "why_restricted": "The decade profile exists for only 1.37% of our cells and that subset is 87.4% positive vs 0.099% elsewhere. Adding these columns to the full table would let the model read the label off feature missingness. This experiment therefore runs only where every row has the profile.",
+  "cannot_self_compute": "Our FIRMS archive is 2025 only, and NOAA-20 launched in November 2017, so a decade of NOAA-20 data does not exist. The IHS profile came from Suomi-NPP.",
+  "population": {
+    "cells": 8210,
+    "positive": 7784,
+    "negative": 426
+  },
+  "headline_metric": "ROC-AUC (subset is 94.8% positive, so PR-AUC is uninformative)",
+  "results": [
+    {
+      "features": "A. 2025 only (what we use today)",
+      "n_features": 19,
+      "roc_auc": 0.7693,
+      "pr_auc": 0.9811,
+      "recall_at_10pct_fp": 0.4529
+    },
+    {
+      "features": "B. 2025 + decade summary",
+      "n_features": 26,
+      "roc_auc": 0.8282,
+      "pr_auc": 0.9851,
+      "recall_at_10pct_fp": 0.4814
+    },
+    {
+      "features": "C. 2025 + decade summary + raw years",
+      "n_features": 36,
+      "roc_auc": 0.8372,
+      "pr_auc": 0.9857,
+      "recall_at_10pct_fp": 0.5127
+    },
+    {
+      "features": "D. decade ONLY (no 2025 features)",
+      "n_features": 17,
+      "roc_auc": 0.8065,
+      "pr_auc": 0.9842,
+      "recall_at_10pct_fp": 0.4575
+    }
+  ],
+  "gain_over_baseline": 0.0679,
+  "verdict": "WORTH IT - request a multi-year Suomi-NPP archive from FIRMS and rebuild these features for all 687,289 cells.",
+  "promoted": false
+}

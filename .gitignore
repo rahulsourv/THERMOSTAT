@@ -1,9 +1,37 @@
+# ---- Python ------------------------------------------------------------
 .venv/
-.env
 __pycache__/
 *.pyc
 
-# data and models are large - keep them out of git
+# ---- Secrets: never commit ---------------------------------------------
+# backend/.env holds the Supabase password, ML/.env holds the FIRMS MAP_KEY.
+# backend/.env.example is the committed template.
+.env
+*.env
+!*.env.example
+
+# ---- Frontend build artefacts ------------------------------------------
+# node_modules is reinstalled by `npm install`; it also contains Windows-only
+# native binaries that are useless on any other machine.
+node_modules/
+frontend/dist/
+
+# ---- Runtime logs --------------------------------------------------------
+# Pipeline logs print the database hostname and are regenerated every run.
+logs/
+*.log
+
+# ---- ML data, models and outputs ------------------------------------------
+# Raw FIRMS archives are multi-GB and feature tables are hundreds of MB, so
+# they stay local. The small JSON metrics files ARE committed: they are the
+# measured results, and the repo should carry its evidence.
 ML/data/
-ML/models/
-ML/outputs/
+ML/models/*
+!ML/models/*.json
+
+# Generated maps and samples stay out; the hand-written verification tool is
+# source code and is kept.
+ML/outputs/*
+!ML/outputs/verify/
+ML/outputs/verify/*
+!ML/outputs/verify/index.html

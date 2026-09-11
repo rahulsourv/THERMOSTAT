@@ -8,7 +8,14 @@ export const PAGES = [
   { id: "industrial", label: "Industrial sources" },
   { id: "fires", label: "Active fires" },
   { id: "classification", label: "Classification" },
+  { id: "model", label: "Model report" },
 ];
+
+// A run older than this is shown as stale. The job fires daily at 05:00 IST;
+// 26 hours leaves slack for a late start without letting a dead scheduler
+// hide behind a green badge - which is exactly how a 07:00 IST misconfiguration
+// once went unnoticed while the dashboard looked perfectly healthy.
+const STALE_AFTER_HOURS = 26;
 
 /** Wordmark: a thermal aperture mark, per the Stitch logo. */
 function Wordmark() {
@@ -40,15 +47,29 @@ function PipelineChip() {
 
   const last = runs.runs[0];
   const ok = last.status === "success";
+  const ageHours = (Date.now() - new Date(last.started_at).getTime()) / 36e5;
+  const stale = ok && ageHours > STALE_AFTER_HOURS;
   const when = new Date(last.started_at).toLocaleString(undefined, {
     day: "numeric", month: "short", year: "numeric",
     hour: "2-digit", minute: "2-digit",
   });
+  const age = ageHours < 1 ? "just now"
+    : ageHours < 48 ? `${Math.round(ageHours)}h ago`
+    : `${Math.round(ageHours / 24)} days ago`;
+
+  // Three states, not two. "Succeeded" and "fresh" are different claims, and
+  // conflating them is what let a stopped scheduler look healthy.
+  const tone = !ok ? "#dc2626" : stale ? "#d97706" : "#16a34a";
+  const label = !ok
+    ? `Pipeline failed · ${when}`
+    : stale
+      ? `Data stale · last run ${age}`
+      : `Pipeline ok · ${when} · ${last.seconds ?? "—"}s`;
 
   return (
-    <Pill dot tone={ok ? "#16a34a" : "#dc2626"}>
-      {`Pipeline ${last.status} · ${when} · ${last.seconds ?? "—"}s`}
-    </Pill>
+    <span title={`Last run ${when} (${age}). Status: ${last.status}.`}>
+      <Pill dot tone={tone}>{label}</Pill>
+    </span>
   );
 }
 
